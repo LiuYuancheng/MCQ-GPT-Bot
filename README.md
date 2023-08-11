@@ -4,3 +4,16 @@
 
 [TOC]
 
+
+
+
+
+lib need to install:
+
+```
+pip install unstructured
+pip install pdf2image
+pip install pdfminer
+pip install pdfminer-six
+```
+

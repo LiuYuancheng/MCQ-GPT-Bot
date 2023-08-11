@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Name:        metroEmuGlobal.py
+# Name:        mcqGPTBotGlobal.py
 #
 # Purpose:     This module is used as a local config file to set constants, 
 #              global parameters which will be used in the other modules.
@@ -83,5 +83,6 @@ D.choice
 """
 
 # question bank file
-Q_BANK_DIR = 'questionbank'
-gQuestionsFile = os.path.join(Q_BANK_DIR, CONFIG_DICT['QUES_BANK'])
+Q_BANK_DIR = os.path.join(dirpath, CONFIG_DICT['questionbank'])
+
+gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QUES_BANK'])

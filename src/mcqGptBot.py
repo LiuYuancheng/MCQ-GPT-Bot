@@ -30,9 +30,9 @@ from langchain.chat_models import ChatOpenAI
 # import different file loader
 from langchain.document_loaders import UnstructuredHTMLLoader
 from langchain.document_loaders import WebBaseLoader
+from langchain.document_loaders import UnstructuredPDFLoader
 
 import mcqGPTBotGlobal as gv
-
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -71,7 +71,12 @@ class QuestionParser(object):
             loader = WebBaseLoader(src)
             data = loader.load()
             result = self.stuff_chain.run(data)
-
+        elif srcType == 'pdf':
+            if os.path.exists(src):
+                gv.gDebugPrint('Processing source file: %s' % str(src), logType=gv.LOG_INFO)
+                loader = UnstructuredPDFLoader(src)
+                data = loader.load_and_split()
+                result = self.stuff_chain.run(data)
         return result
 
     def addToDatabank(self, src, result):
@@ -90,10 +95,13 @@ class QuestionParser(object):
 def testCase():
     
     mcqParser = QuestionParser()
-    #txtFile = gv.gQuestionsFile
+    txtFile = gv.gQuestionsFile
     #data = mcqParser.getQuestions(txtFile, srcType='html')
-    src = "https://www.yeahhub.com/certified-ethical-hacker-v10-multiple-choice-questions-answers-part-9/"
-    data = mcqParser.getQuestions(src, srcType='url')
+
+    data = mcqParser.getQuestions(txtFile, srcType='pdf')
+    #src = "https://www.yeahhub.com/certified-ethical-hacker-v10-multiple-choice-questions-answers-part-9/"
+    #data = mcqParser.getQuestions(src, srcType='url')
+    
     #mcqParser.loadQuestions(txtFile)
     print(data)
 

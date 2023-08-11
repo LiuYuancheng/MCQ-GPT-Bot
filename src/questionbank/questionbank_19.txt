@@ -1,0 +1,63 @@
+Question:Which of the following is an example of a protocol used in ICS communications?
+- HTTP
+- FTP
+- Modbus
+- SMTP
+Answer:C
+
+Question:At which level of the Purdue Model, are the programmable logic controllers (PLCs) typically found?
+- Level 0
+- Level 1
+- Level 2
+- Level 3
+- Level 4
+Answer:B
+
+Question: What is the purpose of a Programmable Logic Controller (PLC) in an industrial control system?
+- Data storage
+- Network routing
+- Process control
+- User interface
+Answer:C
+
+Question: In the Modbus protocol, what type of device typically acts as the master?
+- PLC
+- Sensor
+- Actuator
+- HMI
+Answer:A
+
+Question: What does the scan time of a PLC indicate?
+- The indexing of timers and counters
+- The completion time of one "rung" of ladder logic
+- The execution time of the entire program
+- The required time for transmitted data communications to finish
+Answer:C
+
+Question:What does SCADA stand for?
+- System Control And Data Acquisition
+- Secure Communications And Data Analysis
+- Supervisory Control And Data Acquisition
+- Safety Compliance And Device Automation
+Answer:C
+
+Question:In Ethernet/IP (ENIP), what does a command id of 0x0004 refer to?
+- List Identity
+- List Services
+- SendRRData
+- SendUnitData
+Answer:B
+
+Question: MMS in IEC 61850 stands for:
+- Manufacturing Message Specification
+- Multi-Protocol Message Service
+- Manufacturing Management System
+- Media Management Service
+Answer:A
+
+Question:GOOSE in IEC 61850 stands for:
+- Generic Object Oriented Substation Engineering
+- Global Open Substation Environment
+- Global Object Oriented Substation Engineering
+- Generic Object Oriented Substation Event
+Answer:D

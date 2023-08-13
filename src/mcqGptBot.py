@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #-----------------------------------------------------------------------------
-# Name:        Mutli-Choice-Question-GPT
+# Name:        Mutli-Choice-Question-GPT-Bot
 #
 # Purpose:     This module is used to help people to batch process the multi
 #              choice cyber security exam questions via Open-AI to get the 
@@ -16,6 +16,7 @@
 #-----------------------------------------------------------------------------
 
 import os
+import json
 
 import openai
 # load the langchain libs
@@ -37,13 +38,22 @@ import mcqGPTBotGlobal as gv
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class QuestionParser(object):
+    """ Load the function data from files or URL, then use AI to parse the 
+        mcqs and generate the standard question bank data.
+    """
     def __init__(self, openAIkey=None, msqTemplate=gv.MCQ_TEMPLATE) -> None:
-        if openAIkey:
-            os.environ["OPENAI_API_KEY"] = openAIkey
+        """ Init example: mcqParser = QuestionParser(openAIkey=<OpenAI-Key-String>,
+            msqTemplate = <question bank string format>
+        )
+            Args:
+                openAIkey (_type_, str): openAIkey. Defaults to None.
+                msqTemplate (_type_, str): _description_. Defaults to gv.MCQ_TEMPLATE.
+        """
+        if openAIkey: os.environ["OPENAI_API_KEY"] = openAIkey
         self.dataloader = None
         self.databankList = []
         self.questionTemplate = PromptTemplate.from_template(msqTemplate)
-        self.llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
+        self.llm = ChatOpenAI(temperature=0, model_name=gv.AI_MODEL)
         self.llm_chain = LLMChain(llm=self.llm, prompt=self.questionTemplate)
         # Define StuffDocumentsChain
         self.stuff_chain = StuffDocumentsChain(
@@ -68,15 +78,18 @@ class QuestionParser(object):
             else:
                 gv.gDebugPrint('Source file: %s not exist' % str(src))
         elif srcType == 'url':
+            gv.gDebugPrint('Processing MCQ url: %s' % str(src), logType=gv.LOG_INFO)
             loader = WebBaseLoader(src)
             data = loader.load()
             result = self.stuff_chain.run(data)
         elif srcType == 'pdf':
             if os.path.exists(src):
-                gv.gDebugPrint('Processing source file: %s' % str(src), logType=gv.LOG_INFO)
+                gv.gDebugPrint('Processing prf source file: %s' % str(src), logType=gv.LOG_INFO)
                 loader = UnstructuredPDFLoader(src)
                 data = loader.load_and_split()
                 result = self.stuff_chain.run(data)
+        else:
+            gv.gDebugPrint("The input src type [%s] is not valid" %str(srcType))
         return result
 
     def addToDatabank(self, src, result):
@@ -89,6 +102,44 @@ class QuestionParser(object):
     def loadQuestions(self, src, srcType='txt'):
         data = self.getQuestions(src, srcType=srcType)
         self.addToDatabank(src, data)
+
+
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+class McqGPTBot(object):
+
+    def __init__(self, openAIkey=None, createQb=False) -> None:
+        self.createQb = createQb
+        self.openAIkey = openAIkey if openAIkey else gv.API_KEY
+        os.environ["OPENAI_API_KEY"] = self.openAIkey
+        self.mcqBanksList = None
+        self.mcqParser = QuestionParser(openAIkey=self.openAIkey)
+
+    def loadNewMcqBanks(self, qbDictFile):
+        """ load the new question bacnk dictionary json file."""
+        if os.path.exists(qbDictFile):
+            self.mcqBanksList = json.load(qbDictFile)
+        else:
+            gv.gDebugPrint("The MCQ bank dictionary json file not exist.")
+    
+    def processMcqBanks(self):
+        if self.mcqBanksList:
+            gv.gDebugPrint("Start to process %s question banks" %str(len(self.mcqbankInfo)), logType=gv.LOG_INFO)
+            for item in self.mcqBanksList:
+                bankName = item['name']
+                bankType = item['type']
+                bankSrc = item['src']
+                self.mcqParser.clearDatabank()
+                self.mcqParser.loadQuestions(bankSrc, srcType=bankType)
+                data = self.mcqParser.getDatabank()
+                #with open()
+
+        else:
+            gv.gDebugPrint("No Questions Bank loaded, please call function loadNewMcqBanks() to load the data.", logType=gv.LOG_INFO)
+
+
+
+
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------

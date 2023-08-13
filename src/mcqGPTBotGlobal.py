@@ -84,5 +84,4 @@ D.choice
 
 # question bank file
 Q_BANK_DIR = os.path.join(dirpath, CONFIG_DICT['questionbank'])
-
 gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QUES_BANK'])

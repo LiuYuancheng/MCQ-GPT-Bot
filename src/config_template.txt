@@ -1,14 +1,10 @@
-# This is the config file template for the module <mcqGPTBotGlobal.py>
+# This is the config file template for the module <monitorApp.py>
 # Setup the paramter with below format (every line follow <key>:<val> format, the
 # key can not be changed):
 
 API_KEY:
 
 AI_MODEL:gpt-3.5-turbo-16k
-
-#QUES_BANK:questionbank_19.txt
-#QUES_BANK:questionbank_20.html
-#QUES_BANK:network-secuirty-quiz-questions-answers.pdf
 
 QS_BANK_DIR:questionbank
 QS_CONT_JSON:questionContents.json

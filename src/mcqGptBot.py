@@ -95,7 +95,7 @@ class QuestionParser(object):
     def addToDatabank(self, src, result):
         dataElement = {
             'src': src,
-            'mcqList': ['Question:' + ct for ct in result.split('Question:')]
+            'mcqList': ['Question:%s' %ct for ct in result.split('Question:')]
         }
         self.databankList.append(dataElement)
 
@@ -118,43 +118,50 @@ class McqGPTBot(object):
     def loadNewMcqBanks(self, qbDictFile):
         """ load the new question bacnk dictionary json file."""
         if os.path.exists(qbDictFile):
-            self.mcqBanksList = json.load(qbDictFile)
+            with open(qbDictFile) as fh:
+                self.mcqBanksList = json.load(fh)
         else:
             gv.gDebugPrint("The MCQ bank dictionary json file not exist.")
     
     def processMcqBanks(self):
         if self.mcqBanksList:
-            gv.gDebugPrint("Start to process %s question banks" %str(len(self.mcqbankInfo)), logType=gv.LOG_INFO)
+            gv.gDebugPrint("Start to process %s question banks" %str(len(self.mcqBanksList)), logType=gv.LOG_INFO)
             for item in self.mcqBanksList:
                 bankName = item['name']
                 bankType = item['type']
-                bankSrc = item['src']
+                bankSrc = item['src'] if str(bankType).lower() == 'url' else os.path.join(gv.Q_BANK_DIR, item['src'])
                 self.mcqParser.clearDatabank()
                 self.mcqParser.loadQuestions(bankSrc, srcType=bankType)
-                data = self.mcqParser.getDatabank()
-                #with open()
-
+                mcqList = self.mcqParser.getDatabank()
+                # create the standard question bank
+                if self.createQb:
+                    bankFilePath = os.path.join(gv.Q_BANK_DIR, bankName+'.txt')
+                    gv.gDebugPrint("Create question bank file: %s" %bankFilePath)
+                    with open(bankFilePath, 'a') as fh:
+                        for mcqDict in mcqList:
+                            srcLine = '# Src:'+ mcqDict['src'] +'\n'
+                            fh.write(srcLine)
+                            for line in mcqDict['mcqList']:
+                                fh.write(line)
         else:
             gv.gDebugPrint("No Questions Bank loaded, please call function loadNewMcqBanks() to load the data.", logType=gv.LOG_INFO)
-
-
-
-
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def testCase():
     
-    mcqParser = QuestionParser()
-    txtFile = gv.gQuestionsFile
+    mcqBot = McqGPTBot(createQb=True)
+    mcqBot.loadNewMcqBanks(gv.gMcqBankContent)
+    mcqBot.processMcqBanks()
+    #txtFile = gv.gQuestionsFile
     #data = mcqParser.getQuestions(txtFile, srcType='html')
 
-    data = mcqParser.getQuestions(txtFile, srcType='pdf')
+    #data = mcqParser.getQuestions(txtFile, srcType='pdf')
     #src = "https://www.yeahhub.com/certified-ethical-hacker-v10-multiple-choice-questions-answers-part-9/"
     #data = mcqParser.getQuestions(src, srcType='url')
     
     #mcqParser.loadQuestions(txtFile)
-    print(data)
+    #print(data)
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':

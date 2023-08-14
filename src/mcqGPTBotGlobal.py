@@ -71,7 +71,7 @@ API_KEY = CONFIG_DICT['API_KEY']
 os.environ["OPENAI_API_KEY"] = API_KEY
 AI_MODEL = CONFIG_DICT['AI_MODEL']
 
-MCQ_TEMPLATE = """Find all the multiple choice questions from the text:
+MCQ_Q_TEMPLATE = """Find all the multiple choice questions from the text:
 "{text}", reformat them and list all the questions under below format:
 
 Question:<question string>
@@ -79,9 +79,25 @@ A.choice
 B.choice
 C.choice
 D.choice
+"""
 
+MCQ_QA_TEMPLATE = """Find all the multiple choice questions with answer from the text:
+"{text}", reformat them and list all the questions with answer under below format:
+
+Question:<question string>
+A.choice
+B.choice
+C.choice
+D.choice
+Answer:
 """
 
 # question bank file
 Q_BANK_DIR = os.path.join(dirpath, CONFIG_DICT['QS_BANK_DIR'])
+
+#-------<GLOBAL VARIABLES (start with "g")>------------------------------------
+# VARIABLES are the built in data type.
 gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QS_CONT_JSON'])
+
+
+#-------<GLOBAL PARAMTERS>-----------------------------------------------------

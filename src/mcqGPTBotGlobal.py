@@ -100,7 +100,7 @@ Return choice indicator character in a in a comma separated list.
 # question bank file
 Q_BANK_DIR = os.path.join(dirpath, CONFIG_DICT['QS_BANK_DIR'])
 
-FILTER_CHAR = ('#', '', '\n', '\r', '\t')
+FILTER_CHAR = ('#', ' ', '\n', '\r', '\t')
 #-------<GLOBAL VARIABLES (start with "g")>------------------------------------
 # VARIABLES are the built in data type.
 gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QS_CONT_JSON'])

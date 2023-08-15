@@ -13,6 +13,7 @@
 #-----------------------------------------------------------------------------
 
 import os
+import re
 
 # load the langchain libs
 from langchain.llms import OpenAI
@@ -44,16 +45,16 @@ class QuestionParser(object):
     """ Load the function data from files or URL, then use AI to parse the 
         mcqs and generate the standard question bank data.
     """
-    def __init__(self, openAIkey=None, msqTemplate=gv.MCQ_Q_TEMPLATE) -> None:
+    def __init__(self, openAIkey=None, mcqTemplate=gv.MCQ_Q_TEMPLATE) -> None:
         """ Init example: mcqParser = QuestionParser(openAIkey=<OpenAI-Key-String>,
             msqTemplate = <question bank string format>
         )
             Args:
                 openAIkey (_type_, str): openAIkey. Defaults to None.
-                msqTemplate (_type_, str): _description_. Defaults to gv.MCQ_Q_TEMPLATE.
+                mcqTemplate (_type_, str): _description_. Defaults to gv.MCQ_Q_TEMPLATE.
         """
         if openAIkey: os.environ["OPENAI_API_KEY"] = openAIkey
-        self.questionTemplate = PromptTemplate.from_template(msqTemplate)
+        self.questionTemplate = PromptTemplate.from_template(mcqTemplate)
         self.llm = ChatOpenAI(temperature=0, model_name=gv.AI_MODEL)
         self.llm_chain = LLMChain(llm=self.llm, prompt=self.questionTemplate)
         # Define StuffDocumentsChain
@@ -100,9 +101,12 @@ class QuestionParser(object):
     def getQuestions(self, src, srcType='txt'):
         """ Get the question list from the question source. """
         result = self._parseQuestions(src, srcType=srcType)
-        if result: 
-            data = ['Question:%s' % ct for ct in result.split('Question:')]
-            return data[1:]
+        if result:
+            questionList = []
+            for ct in result.split('Question:')[1:]:
+                data = 'Question:%s' % ct.strip('\n')
+                questionList.append(data)
+            return questionList
         return None
 
 #-----------------------------------------------------------------------------
@@ -181,13 +185,14 @@ class McqDataManager(object):
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 
+
 class CommaSeparatedListOutputParser(BaseOutputParser):
     """Parse the output of an LLM call to a comma-separated list."""
     def parse(self, text: str):
         """Parse the output of an LLM call."""
-        return text.strip().split(", ")
+        return text.strip().split(",")
 
-
+#-----------------------------------------------------------------------------
 class llmMcqSolver(object):
 
     def __init__(self, openAIkey=None, systemTemplate=gv.MCQ_SOL_TEMPLATE) -> None:
@@ -200,16 +205,20 @@ class llmMcqSolver(object):
                                  prompt=chat_prompt, 
                                  output_parser=CommaSeparatedListOutputParser())
 
+#-----------------------------------------------------------------------------
     def getAnswer(self, questionString):
         if 'Answer:' in questionString: questionString = questionString.split('Answer:')[0]
         answerList = self.llmChain.run(questionString)
         if answerList: 
             answerList.sort()
-            return ''.join(answerList)
+            # only find the choice indicator:
+            reusltChars = re.findall(r'\b[A-H]+\b', ''.join(answerList))
+            return ''.join(reusltChars) 
         else:
             gv.gDebugPrint('AI not able to find answer for question: %s ' % questionString)
             return None
 
+#-----------------------------------------------------------------------------
     def compareAnswer(self, questionString, answerStr=None):
         """ Compare the AI answer with the correct answer """
         aiAnswer = self.getAnswer(questionString)
@@ -218,7 +227,7 @@ class llmMcqSolver(object):
             answerStr = ''.join([*answerStr].sort())
         else:
             if 'Answer:' in questionString:
-                answerStr = questionString.questionString.split('Answer:')[1]
+                answerStr = questionString.split('Answer:')[1]
                 answerStr = answerStr.replace('\n', '')
                 answerStr = answerStr.replace(' ', '')
-        return (answerStr, aiAnswer, aiAnswer==answerStr)
+        return (answerStr, aiAnswer, aiAnswer == answerStr)

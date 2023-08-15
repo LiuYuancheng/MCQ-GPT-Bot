@@ -104,7 +104,7 @@ class McqGPTBot(object):
     def appendCompareResult(self, bankFilePath, correctCount, totalCount):
         with open(bankFilePath, 'a', encoding="utf8") as fh:
             fh.write('\n')
-            fh.write('AI Answer compare (correct / totaol) : %s / %s ' % (str(correctCount), str(totalCount)))
+            fh.write('AI Answer compare (correct / total) : %s / %s ' % (str(correctCount), str(totalCount)))
             if totalCount == 0: totalCount = 1
             fh.write('Correctness rate : %s' % str(float(correctCount)/totalCount))
 

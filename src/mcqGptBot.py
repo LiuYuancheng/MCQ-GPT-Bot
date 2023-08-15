@@ -33,6 +33,8 @@ class McqGPTBot(object):
         self.dataMgr = botUtils.McqDataManager()
         self.mcqParser = botUtils.QuestionParser(openAIkey=self.openAIkey, 
                                                  msqTemplate=gv.MCQ_QA_TEMPLATE)
+        self.mcqSolver = botUtils.llmMcqSolver()
+
 
 #-----------------------------------------------------------------------------
     def _createQBfile(self, bankFilePath, mcqDict, aiAnsFlg=False):
@@ -46,7 +48,7 @@ class McqGPTBot(object):
                 fh.write(question)
                 if logAiAnswer and idx < len(mcqDict['aiAnswers']):
                     aiAnsStr = 'AiAns:' + mcqDict['aiAnswers'][idx] + '\n'
-                    fh.write(question)
+                    fh.write(aiAnsStr)
 
 #-----------------------------------------------------------------------------
     def loadNewMcqBanks(self, qbDictFile):
@@ -56,6 +58,13 @@ class McqGPTBot(object):
                 self.mcqBanksList = json.load(fh)
         else:
             gv.gDebugPrint("The MCQ bank dictionary json file not exist.")
+
+    def updateAIAnswers(self, bankName, questionList):
+        answerList = []
+        for question in questionList:
+            answer = self.mcqSolver.getAnswer(question)
+            answerList.append(answer)
+        self.dataMgr.addAiAnswers(bankName, answerList)
 
 #-----------------------------------------------------------------------------
     def processMcqBanks(self, createQb=None):
@@ -68,8 +77,13 @@ class McqGPTBot(object):
                 questionlist = self.mcqParser.getQuestions(bankSrc, srcType=bankType)
                 self.dataMgr.addQuestions(bankName, bankSrc, questionlist)
                 mcqDict = self.dataMgr.getMcqData(mcqSetName=bankName)
+                # get the questions
+                
+                self.updateAIAnswers(bankName, mcqDict['mcqList'])
+
+
                 bankFilePath = os.path.join(gv.Q_BANK_DIR, bankName+'.txt')
-                self._createQBfile(bankFilePath, mcqDict)
+                self._createQBfile(bankFilePath, mcqDict, aiAnsFlg=True)
         else:
             gv.gDebugPrint("No Questions Bank loaded, please call function loadNewMcqBanks() to load the data.", logType=gv.LOG_INFO)
 

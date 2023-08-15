@@ -91,10 +91,16 @@ C.choice
 D.choice
 Answer:
 """
+MCQ_SOL_TEMPLATE = """You are a helpful assistant who find the answer of the 
+cyber security multi choice questions. Just give the correct choice's front indicator 
+character or characters (if the question shows you need to choose more than one choice). 
+Return choice indicator character in a in a comma separated list. 
+"""
 
 # question bank file
 Q_BANK_DIR = os.path.join(dirpath, CONFIG_DICT['QS_BANK_DIR'])
 
+FILTER_CHAR = ('#', '', '\n', '\r', '\t')
 #-------<GLOBAL VARIABLES (start with "g")>------------------------------------
 # VARIABLES are the built in data type.
 gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QS_CONT_JSON'])

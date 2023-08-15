@@ -1,19 +1,21 @@
 #!/usr/bin/python
 #-----------------------------------------------------------------------------
-# Name:        Multi-Choice-Question-GPT-Bot untils 
+# Name:        Multi-Choice-Question-GPT-Bot utilities 
 #
-# Purpose:     This module will provide different function modules used 
-# 
+# Purpose:     This module will provide different OpenAI utility function modules 
+#              used by the MCQ-GPT-Bot modules.
+#                
 # Author:      Yuancheng Liu
 #
 # Created:     2023/08/14
-# Version:     v_0.1
-# Copyright:   n.a
-# License:     n.a
+# Version:     v_0.1.2
+# Copyright:   Copyright (c) 2023 LiuYuancheng
+# License:     MIT License
 #-----------------------------------------------------------------------------
 
 import os
 import re
+import time
 
 # load the langchain libs
 from langchain.llms import OpenAI
@@ -21,7 +23,6 @@ from langchain.chains import LLMChain
 from langchain.chains.llm import LLMChain
 from langchain.chat_models import ChatOpenAI
 
-from langchain.chains.summarize import load_summarize_chain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 
 from langchain.prompts import PromptTemplate
@@ -47,30 +48,27 @@ class QuestionParser(object):
     """
     def __init__(self, openAIkey=None, mcqTemplate=gv.MCQ_Q_TEMPLATE) -> None:
         """ Init example: mcqParser = QuestionParser(openAIkey=<OpenAI-Key-String>,
-            msqTemplate = <question bank string format>
-        )
+            msqTemplate = <question bank string format>)
             Args:
                 openAIkey (_type_, str): openAIkey. Defaults to None.
-                mcqTemplate (_type_, str): _description_. Defaults to gv.MCQ_Q_TEMPLATE.
+                mcqTemplate (_type_, str): question parse template. Defaults to gv.MCQ_Q_TEMPLATE.
         """
         if openAIkey: os.environ["OPENAI_API_KEY"] = openAIkey
+        # Define StuffDocumentsChain
         self.questionTemplate = PromptTemplate.from_template(mcqTemplate)
         self.llm = ChatOpenAI(temperature=0, model_name=gv.AI_MODEL)
         self.llm_chain = LLMChain(llm=self.llm, prompt=self.questionTemplate)
-        # Define StuffDocumentsChain
-        self.stuff_chain = StuffDocumentsChain(
-            llm_chain=self.llm_chain, document_variable_name="text"
-        )
+        self.stuff_chain = StuffDocumentsChain(llm_chain=self.llm_chain, 
+                                               document_variable_name="text")
 
 #-----------------------------------------------------------------------------
     def _parseQuestions(self, src, srcType='txt'):
-        """ parse questions from the src file/url
+        """ Parse questions with the choices from the src file/url.
             Args:
-                src (str): ctf questions source.
+                src (str): ctf questions source file/url.
                 srcType (str, optional): questions source type. Defaults to 'txt'.
-
             Returns:
-                _type_: _description_
+                str: long string contents all the questions.
         """
         result = None
         srcType = str(srcType).lower()
@@ -80,6 +78,7 @@ class QuestionParser(object):
                 loader = UnstructuredHTMLLoader(src, mode="elements")
                 data = loader.load()
                 result = self.stuff_chain.run(data)
+                gv.gDebugPrint('Question parse finish.')
             else:
                 gv.gDebugPrint('Source file: %s not exist' % str(src))
         elif srcType == 'url':
@@ -87,19 +86,22 @@ class QuestionParser(object):
             loader = WebBaseLoader(src)
             data = loader.load()
             result = self.stuff_chain.run(data)
+            gv.gDebugPrint('Question parse finish.')
         elif srcType == 'pdf':
             if os.path.exists(src):
                 gv.gDebugPrint('Processing prf source file: %s' % str(src), logType=gv.LOG_INFO)
                 loader = UnstructuredPDFLoader(src)
                 data = loader.load_and_split()
                 result = self.stuff_chain.run(data)
+                gv.gDebugPrint('Question parse finish.')
         else:
             gv.gDebugPrint("The input src type [%s] is not valid" % str(srcType))
+        time.sleep(0.2) # sleep a short time interval to avoid reach the openAI access limitation
         return result
 
 #-----------------------------------------------------------------------------
     def getQuestions(self, src, srcType='txt'):
-        """ Get the question list from the question source. """
+        """ Get the questions list from the question source. """
         result = self._parseQuestions(src, srcType=srcType)
         if result:
             questionList = []
@@ -112,11 +114,13 @@ class QuestionParser(object):
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class McqDataManager(object):
-
+    """ Multi-Choice-Question-GPT-Bot data manager used to store the data."""
     def __init__(self) -> None:
         self.questionBank = {}
 
+#-----------------------------------------------------------------------------
     def addQuestions(self, mcqSetName, src, questionList, answerList=None):
+        """ Add the questions to question bank dict. """
         questionSet = {
             'src': src if src else mcqSetName,
             'mcqList': questionList,
@@ -127,7 +131,11 @@ class McqDataManager(object):
 
 #-----------------------------------------------------------------------------
     def addStandQuestionFile(self, bankName, questionFile):
-
+        """ Add the standard question bank txt file in the question bank dict.
+            Args:
+                bankName (str): question bank name
+                questionFile (str): standard question file path.
+        """
         if os.path.exists(questionFile):
             questionList = []
             answerList = []
@@ -149,10 +157,11 @@ class McqDataManager(object):
                             answerList.append(answerStr.strip())
                         else:
                             questionStr += line
-                # when finish scan all line add the last question:
+                # when finish scan all lines and add the last question:
                 if questionStr: questionList.append(questionStr)
             if len(questionList) == len(answerList):
-                self.addQuestions(bankName, None, questionList, answerList=answerList )
+                self.addQuestions(bankName, None, questionList,
+                                  answerList=answerList)
             else:
                 gv.gDebugPrint("Question number and answer number not match, please check the bank file: %s" % questionFile,
                                 logType=gv.LOG_WARN)
@@ -184,8 +193,6 @@ class McqDataManager(object):
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
-
-
 class CommaSeparatedListOutputParser(BaseOutputParser):
     """Parse the output of an LLM call to a comma-separated list."""
     def parse(self, text: str):
@@ -194,6 +201,7 @@ class CommaSeparatedListOutputParser(BaseOutputParser):
 
 #-----------------------------------------------------------------------------
 class llmMcqSolver(object):
+    """ MCQ solving module. """
 
     def __init__(self, openAIkey=None, systemTemplate=gv.MCQ_SOL_TEMPLATE) -> None:
         if openAIkey: os.environ["OPENAI_API_KEY"] = openAIkey
@@ -209,6 +217,7 @@ class llmMcqSolver(object):
     def getAnswer(self, questionString):
         if 'Answer:' in questionString: questionString = questionString.split('Answer:')[0]
         answerList = self.llmChain.run(questionString)
+        time.sleep(0.4) # sleep a short time interval to avoid reach the openAI access limitation
         if answerList: 
             answerList.sort()
             # only find the choice indicator:

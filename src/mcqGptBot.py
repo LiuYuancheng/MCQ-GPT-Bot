@@ -27,14 +27,29 @@ class McqGPTBot(object):
     def __init__(self, openAIkey=None, mcqTemplate=gv.MCQ_QA_TEMPLATE) -> None:
         self.openAIkey = openAIkey if openAIkey else gv.API_KEY
         os.environ["OPENAI_API_KEY"] = self.openAIkey
+        # Init the data manager
         self.dataMgr = botUtils.McqDataManager()
+        # Init the mcq question parser
         self.mcqParser = botUtils.QuestionParser(openAIkey=self.openAIkey, 
                                                  mcqTemplate=mcqTemplate)
+        # Init the mcq solver
         self.mcqSolver = botUtils.llmMcqSolver()
-
 
 #-----------------------------------------------------------------------------
     def _createQBfile(self, bankFilePath, mcqDict, aiAnsFlg=False):
+        """ Create the question bank file.
+        Args:
+            bankFilePath (str): question bank file path.
+            mcqDict (dict): mcq data dictionary. examle:
+                {
+                    'src': src if src else mcqSetName,
+                    'mcqList': questionList,
+                    'crtAnswers': answerList,
+                    'aiAnswers': None
+                }
+            aiAnsFlg (bool, optional): whether append AI answer behind the 
+                question. Defaults to False.
+        """
         gv.gDebugPrint("Create question bank file: %s" %bankFilePath)
         with open(bankFilePath, 'a', encoding="utf8") as fh:
             srcLine = '# Src:'+ mcqDict['src'] +'\n'
@@ -60,6 +75,9 @@ class McqGPTBot(object):
 
 #-----------------------------------------------------------------------------
     def updateAIAnswers(self, bankName, questionList):
+        """ Get the AI's answer of the questions and update the data manager's 
+            record.
+        """
         answerList = []
         for question in questionList:
             answer = self.mcqSolver.getAnswer(question)
@@ -68,6 +86,11 @@ class McqGPTBot(object):
 
 #-----------------------------------------------------------------------------
     def compareAIAnswers(self, bankName, questionList):
+        """ Get the AI's answer of the questions and compare with the correct answer
+            to calcuate the answer correctness rate.
+            Returns:
+                (int, int): (correct_Answer_Count, total_Question_count)
+        """
         answerList = []
         correctCount = 0
         for question in questionList:
@@ -76,7 +99,8 @@ class McqGPTBot(object):
             if crt: correctCount +=1
         self.dataMgr.addAiAnswers(bankName, answerList)
         return (correctCount, len(questionList))
-
+    
+#-----------------------------------------------------------------------------
     def appendCompareResult(self, bankFilePath, correctCount, totalCount):
         with open(bankFilePath, 'a', encoding="utf8") as fh:
             fh.write('\n')
@@ -93,6 +117,7 @@ class McqGPTBot(object):
                 bankType = item['type']
                 bankSrc = item['src'] if str(bankType).lower() == 'url' else os.path.join(gv.Q_BANK_DIR, item['src'])
                 questionlist = self.mcqParser.getQuestions(bankSrc, srcType=bankType)
+                gv.gDebugPrint("- finished parsing the questions from source.")
                 self.dataMgr.addQuestions(bankName, bankSrc, questionlist)
                 mcqDict = self.dataMgr.getMcqData(mcqSetName=bankName)
                 # get the questions solution
@@ -105,7 +130,6 @@ class McqGPTBot(object):
                 self._createQBfile(bankFilePath, mcqDict, aiAnsFlg=True)
                 if calCrtRate:
                     self.appendCompareResult(bankFilePath, crt, total)
-
             gv.gDebugPrint("Finished process all the question source.")
         else:
             gv.gDebugPrint("No Questions Bank loaded, please call function loadNewMcqBanks() to load the data.", logType=gv.LOG_INFO)

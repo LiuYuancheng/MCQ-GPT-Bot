@@ -57,6 +57,7 @@ def gDebugPrint(msg, prt=True, logType=None):
     elif logType == LOG_INFO or DEBUG_FLG:
         Log.info(msg)
 
+#-----------------------------------------------------------------------------
 # load the config file.
 import ConfigLoader
 CONFIG_FILE_NAME = 'config.txt'
@@ -67,10 +68,12 @@ if iConfigLoader is None:
     exit()
 CONFIG_DICT = iConfigLoader.getJson()
 
+#-----------------------------------------------------------------------------
+# Init the openAI parameters.
 API_KEY = CONFIG_DICT['API_KEY']
 os.environ["OPENAI_API_KEY"] = API_KEY
 AI_MODEL = CONFIG_DICT['AI_MODEL']
-
+# Question parse prompt without parse the answer.
 MCQ_Q_TEMPLATE = """Find all the multiple choice questions from the text:
 "{text}", reformat them and list all the questions under below format:
 
@@ -80,7 +83,7 @@ B.choice
 C.choice
 D.choice
 """
-
+# Question parse prompt with parse the answer.
 MCQ_QA_TEMPLATE = """Find all the multiple choice questions with answer from the text:
 "{text}", reformat them and list all the questions with answer under below format:
 
@@ -91,6 +94,7 @@ C.choice
 D.choice
 Answer:
 """
+# Question solution template.
 MCQ_SOL_TEMPLATE = """You are a helpful assistant who find the answer of the 
 cyber security multi choice questions. Just give the correct choice's front indicator 
 character or characters (if the question shows you need to choose more than one choice). 

@@ -1,10 +1,17 @@
-# This is the config file template for the module <monitorApp.py>
-# Setup the paramter with below format (every line follow <key>:<val> format, the
-# key can not be changed):
+# This is the config file template for the module <mcqGptBot.py>
+# Setup the parameter with below format (every line follow <key>:<val> format, the
+# key cannot be changed):
 
-API_KEY:
+# set openAI API key
+API_KEY:<Add your openAI key here>
 
+# select the AI model apply to the mcq.
 AI_MODEL:gpt-3.5-turbo-16k
 
+# folder name of the question source files, the source folder need to be in the 
+# same folder of mcqGptBot.py.
 QS_BANK_DIR:questionbank
-QS_CONT_JSON:questionContents.json
+
+# The json file which contents the source files information need to process in the 
+# question source folder.
+QS_CONT_JSON:questionContents_test.json

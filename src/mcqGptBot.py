@@ -24,7 +24,11 @@ import mcqGptBotUtils as botUtils
 #-----------------------------------------------------------------------------
 class McqGPTBot(object):
 
-    def __init__(self, openAIkey=None, mcqTemplate=gv.MCQ_QA_TEMPLATE) -> None:
+    def __init__(self, openAIkey=None, 
+                 mcqTemplate=gv.MCQ_QA_TEMPLATE,
+                 solTemplate=gv.MCQ_SOL_TEMPLATE
+                 ) -> None:
+        
         self.openAIkey = openAIkey if openAIkey else gv.API_KEY
         os.environ["OPENAI_API_KEY"] = self.openAIkey
         # Init the data manager
@@ -33,7 +37,7 @@ class McqGPTBot(object):
         self.mcqParser = botUtils.QuestionParser(openAIkey=self.openAIkey, 
                                                  mcqTemplate=mcqTemplate)
         # Init the mcq solver
-        self.mcqSolver = botUtils.llmMcqSolver()
+        self.mcqSolver = botUtils.llmMcqSolver(systemTemplate=solTemplate)
 
 #-----------------------------------------------------------------------------
     def _createQBfile(self, bankFilePath, mcqDict, aiAnsFlg=False):
@@ -79,7 +83,9 @@ class McqGPTBot(object):
             record.
         """
         answerList = []
-        for question in questionList:
+        questionNum = len(questionList)
+        for idx, question in enumerate(questionList):
+            gv.gDebugPrint("- start to process question %s / %s " % (str(idx+1), str(questionNum)))
             answer = self.mcqSolver.getAnswer(question)
             answerList.append(answer)
         self.dataMgr.addAiAnswers(bankName, answerList)
@@ -110,6 +116,11 @@ class McqGPTBot(object):
 
 #-----------------------------------------------------------------------------
     def processMcqBanks(self, calCrtRate=False):
+        """ process the questions in the data manager.
+            Args:
+                calCrtRate (bool, optional): flag to indenfiy whether to calculate 
+                the AI solution correctness rate. Defaults to False.
+        """
         if self.mcqBanksList:
             gv.gDebugPrint("Start to process %s question banks" %str(len(self.mcqBanksList)), logType=gv.LOG_INFO)
             for item in self.mcqBanksList:
@@ -132,12 +143,14 @@ class McqGPTBot(object):
                     self.appendCompareResult(bankFilePath, crt, total)
             gv.gDebugPrint("Finished process all the question source.")
         else:
-            gv.gDebugPrint("No Questions Bank loaded, please call function loadNewMcqBanks() to load the data.", logType=gv.LOG_INFO)
+            gv.gDebugPrint("No Questions Bank loaded, please call \
+                           function loadNewMcqBanks() to load the data.", logType=gv.LOG_INFO)
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def main():
-    #mcqBot = McqGPTBot(mcqTemplate=gv.MCQ_Q_TEMPLATE)
+    # mcqBot = McqGPTBot(mcqTemplate=gv.MCQ_Q_TEMPLATE)
+    # mcqBot = McqGPTBot(solTemplate=gv.CCNA_SOL_TEMPLATE)
     mcqBot = McqGPTBot()
     mcqBot.loadNewMcqBanks(gv.gMcqBankContent)
     mcqBot.processMcqBanks(calCrtRate=True)

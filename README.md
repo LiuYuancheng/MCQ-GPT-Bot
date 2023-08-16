@@ -65,7 +65,7 @@ As shown in the workflow diagram, the program contents three main modules:
 
 **McqDataManager **: Data manager to store and questions, AI's answers and format the questions. 
 
-**llmMcqSolver** : load the question from the data manager, call OpenAI API to get the answer and calculate the AI's correctness rate based on the setting.
+**llmMcqSolver** : load the question from the data manager, preload the MCQ questions scenario prompt to AI, then call OpenAI API to get the answer and calculate the AI's correctness rate based on the setting.
 
 After process, different kind of question format source will be convert to the standard question bank file format as shown blow: 
 
@@ -87,6 +87,23 @@ Question:< Question string >
 AI Answer compare (correct / total) : <correct number> / <total number>
 Correctness rate: <>
 ```
+
+
+
+##### Question Solution Prompt
+
+Before we pass the question solving scenario prompt to the AI 1st, then start to process the question, the AI will provide a higher problem solving correctness rate. For example if we want to process the Cisco CCNP Security Implementing Cisco Threat Control Solutions Exam, if we pre-load the prompt to the AI: 
+
+```
+CCNA_SOL_TEMPLATE = """You are a helpful assistant who find the answer of the Cisco
+CCNP Security Implementing Cisco Secure Access multi choice questions. Just give the 
+correct choice's front indicator character or characters (if the question shows you 
+need to choose more than one choice). Return choice indicator character in a in a comma 
+separated list. 
+"""
+```
+
+The correctness rate will increate from (10/24) **41.66%** to (12/24)**50.0%** if we test 24 questions. If you load a good scenario prompt to the AI, AI will understand the question better especially for the worlds abbreviation.
 
 
 
@@ -253,7 +270,7 @@ This is normal, you need to set the payment on you openAI account.
 | 13   | Yeahhub CTF-repo: Certified Ethical Hacker 2021 v10 exam part (13-14) | questionbank_14.txt    | 32                   | 44                 | 72.72 %                      |
 | 14   | CCNA Security Implementing Cisco Network Security Exam       | questionbank_15.txt    | 34                   | 55                 | 61.81%                       |
 | 15   | CCNP Security Implementing Cisco Edge Network Security Solutions (SENSS) Exam | questionbank_16.txt    | 32                   | 58                 | 55.17%                       |
-| 16   | CCNP Security Implementing Cisco Secure Access Solutions (SISAS) Exam | questionbank_17.txt    | 10                   | 24                 | 41.66 %                      |
+| 16   | CCNP Security Implementing Cisco Secure Access Solutions (SISAS) Exam | questionbank_17.txt    | 12                   | 24                 | 50.0%                        |
 | 17   | CCNP Security Implementing Cisco Threat Control Solutions Exam | questionbank_18.txt    | 23                   | 38                 | 60.52 %                      |
 |      |                                                              |                        |                      |                    |                              |
 

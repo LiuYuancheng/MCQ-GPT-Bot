@@ -1,0 +1,83 @@
+# Src:C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\network-secuirty-quiz-questions-answers.pdf
+Question: Which of the following is independent malicious program that needs not any host program?
+A. Trap doors
+B. Trojan horse
+C. Virus
+D. Worm
+Answer: D
+AiAns:D
+
+Question: _____ programs can be used to accomplish functions, indirectly that an unauthorised users could not accomplish directly.
+A. Zombie
+B. Worm
+C. Trojan Horse
+D. Logic Bomb
+Answer: C
+AiAns:C
+
+Question: Protocols refers to
+A. rules
+B. methods
+C. rules and methods
+D. none of these
+Answer: C
+AiAns:C
+
+Question: The study of secret codes associated with classified information and intelligence gathering is called
+A. encryption
+B. scripting
+C. cryptography
+D. secure sockets layers
+Answer: C
+AiAns:C
+
+Question: Hacking refers to
+A. data access without permission
+B. data updation without permission
+C. data deletion without permission
+D. all of these
+Answer: D
+AiAns:D
+
+Question: Secure hash algorithm developed by
+A. NIST
+B. IEE
+C. ANSI
+D. None of these
+Answer: A
+AiAns:A
+
+Question: The digital signature standard proposed in
+A. 1991
+B. 1993
+C. 1995
+D. 1997
+Answer: A
+AiAns:B
+
+Question: IAB mean
+A. Internet Architecture Board
+B. Intranet Architecture Board
+C. Internet Architecture Base
+D. None of these
+Answer: A
+AiAns:A
+
+Question: The method of hiding the secret is
+A. Cryptography
+B. Steganography
+C. Stenography
+D. Cryptanalysis
+Answer: B
+AiAns:B
+
+Question: IPSec is designed to provide the security at the
+A. Transport layer
+B. Network layer
+C. Application layer
+D. Session layer
+Answer: B
+AiAns:B
+
+
+AI Answer compare (correct / total) : 9 / 10 Correctness rate : 0.9

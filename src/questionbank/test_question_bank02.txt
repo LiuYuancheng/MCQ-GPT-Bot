@@ -1,0 +1,187 @@
+# Src:C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\questionbank_20.html
+Question: The establishment of a TCP connection involves a negotiation called three-way handshake. What type of message does the client send to the server in order to begin this negotiation?
+A. ACK
+B. SYN
+C. RST
+D. SYN-ACK
+Answer: B
+AiAns:B
+
+Question: You need a tool that can do network intrusion prevention and intrusion detection, function as a network sniffer, and record network activity. What tool would you most likely select?
+A. Snort
+B. Nmap
+C. Cain & Abel
+D. Nessus
+Answer: A
+AiAns:A
+
+Question: Which of the following will perform an Xmas scan using NMAP?
+A. nmap -sA 192.168.1.254
+B. nmap -sP 192.168.1.254
+C. nmap -sX 192.168.1.254
+D. nmap -sV 192.168.1.254
+Answer: C
+AiAns:C
+
+Question: Code injection is a form of attack in which a malicious user:
+A. Inserts text into a data field that gets interpreted as code
+B. Gets the server to execute arbitrary code using a buffer overflow
+C. Inserts additional code into the JavaScript running in the browser
+D. Gains access to the codebase on the server and inserts new code
+Answer: A
+AiAns:A
+
+Question: The collection of potentially actionable, overt, and publicly available information is known as
+A. Open-source intelligence
+B. Human intelligence
+C. Social intelligence
+D. Real intelligence
+Answer: A
+AiAns:A
+
+Question: Which one of the following Google advanced search operators allows an attacker to restrict the results to those websites in the given domain?
+A. [cache:]
+B. [site:]
+C. [inurl:]
+D. [link:]
+Answer: B
+AiAns:B
+
+Question: This asymmetry cipher is based on factoring the product of two large prime numbers. What cipher is described above?
+A. SHA
+B. RSA
+C. MD5
+D. RC5
+Answer: B
+AiAns:B
+
+Question: Firewalls are the software or hardware systems that are able to control and monitor the traffic coming in and out the target network based on pre-defined set of rules. Which of the following types of firewalls can protect against SQL injection attacks?
+A. Data-driven firewall
+B. Stateful firewall
+C. Packet firewall
+D. Web application firewall
+Answer: D
+AiAns:D
+
+Question: During a recent security assessment, you discover the organization has one Domain Name Server (DNS) in a Demilitarized Zone (DMZ) and a second DNS server on the internal network. What is this type of DNS configuration commonly called?
+A. DynDNS
+B. DNS Scheme
+C. DNSSEC
+D. Split DNS
+Answer: D
+AiAns:D
+
+Question: In which of the following cryptography attack methods, the attacker makes a series of interactive queries, choosing subsequent plaintexts based on the information from the previous encryptions?
+A. Chosen-plaintext attack
+B. Ciphertext-only attack
+C. Adaptive chosen-plaintext attack
+D. Known-plaintext attack
+Answer: A
+AiAns:C
+
+Question: Which of the following attacks exploits web age vulnerabilities that allow an attacker to force an unsuspecting user’s browser to send malicious requests they did not intend?
+A. Command Injection Attacks
+B. File Injection Attack
+C. Cross-Site Request Forgery (CSRF)
+D. Hidden Field Manipulation Attack
+Answer: C
+AiAns:C
+
+Question: Which is the first step followed by Vulnerability Scanners for scanning a network?
+A. TCP/UDP Port scanning
+B. Firewall detection
+C. OS Detection
+D. Checking if the remote host is alive
+Answer: D
+AiAns:D
+
+Question: Shellshock allowed an unauthorized user to gain access to a server. It affected many Internet-facing services, which OS did it not directly affect?
+A. Linux
+B. Unix
+C. OS X
+D. Windows
+Answer: D
+AiAns:C
+
+Question: Alice encrypts her data using her public key PK and stores the encrypted data in the cloud. Which of the following attack scenarios will compromise the privacy of her data?
+A. None of these scenarios compromise the privacy of Alice’s data
+B. Agent Andrew subpoenas Alice, forcing her to reveal her private key. However, the cloud server successfully resists Andrew’s attempt to access the stored data
+C. Hacker Harry breaks into the cloud server and steals the encrypted data
+D. Alice also stores her private key in the cloud, and Harry breaks into the cloud server as before
+Answer: D
+AiAns:C
+
+Question: A hacker named Jack is trying to compromise a bank’s computer system. He needs to know the operating system of that computer to launch further attacks. What process would help him?
+A. Banner Grabbing
+B. IDLE/IPID Scanning
+C. SSDP Scanning
+D. UDP Scanning
+Answer: A
+AiAns:A
+
+Question: What two conditions must a digital signature meet?
+A. Has to be legible and neat.
+B. Has to be unforgeable, and has to be authentic.
+C. Must be unique and have special characters.
+D. Has to be the same number of characters as a physical signature and must be unique.
+Answer: B
+AiAns:B
+
+Question: Bob, a network administrator at BigUniversity, realized that some students are connecting their notebooks in the wired network to have Internet access. In the university campus, there are many Ethernet ports available for professors and authorized visitors but not for students. He identified this when the IDS alerted for malware activities in the network. What should Bob do to avoid this problem?
+A. Disable unused ports in the switches
+B. Separate students in a different VLAN
+C. Use the 802.1x protocol
+D. Ask students to use the wireless network
+Answer: C
+AiAns:A
+
+Question: Which of the following Bluetooth hacking techniques does an attacker use to send messages to users without the recipient’s consent, similar to email spamming?
+A. Bluesmacking
+B. Bluesniffing
+C. Bluesnarfing
+D. Bluejacking
+Answer: D
+AiAns:D
+
+Question: Which method of password cracking takes the most time and effort?
+A. Shoulder surfing
+B. Brute force
+C. Dictionary attack
+D. Rainbow tables
+Answer: B
+AiAns:B
+
+Question: Which of the following program infects the system boot sector and the executable files at the same time?
+A. Stealth virus
+B. Polymorphic virus
+C. Macro virus
+D. Multipartite Virus
+Answer: D
+AiAns:D
+
+Question: You are a Penetration Tester and are assigned to scan a server. You need to use a scanning technique wherein the TCP Header is split into many packets so that it becomes difficult to detect what the packets are meant for. Which of the below scanning technique will you use?
+A. ACK flag scanning
+B. TCP Scanning
+C. IP Fragment Scanning
+D. Inverse TCP flag scanning
+Answer: C
+AiAns:C
+
+Question: An IT employee got a call from one of our best customers. The caller wanted to know about the company’s network infrastructure, systems, and team. New opportunities of integration are in sight for both company and customer. What should this employee do?
+A. The employees cannot provide any information; but, anyway, he/she will provide the name of the person in charge.
+B. Since the company’s policy is all about Customer Service, he/she will provide information.
+C. Disregarding the call, the employee should hang up.
+D. The employee should not provide any information without previous management authorization.
+Answer: D
+AiAns:D
+
+Question: You perform a scan of your company’s network and discover that TCP port 123 is open. What services by default run on TCP port 123?
+A. Telnet
+B. POP3
+C. Network Time Protocol
+D. DNS
+Answer: C
+AiAns:C
+
+
+AI Answer compare (correct / total) : 19 / 23 Correctness rate : 0.8260869565217391

@@ -117,5 +117,4 @@ FILTER_CHAR = ('#', ' ', '\n', '\r', '\t')
 # VARIABLES are the built in data type.
 gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QS_CONT_JSON'])
 
-
 #-------<GLOBAL PARAMTERS>-----------------------------------------------------

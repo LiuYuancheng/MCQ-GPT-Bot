@@ -1,6 +1,6 @@
 # MCQ-GPT-Bot
 
-**Program design**:  We want to create an assistant AI-Bot program which can batch process the multi choice cyber security exam questions (From different source format: `url`, `html`, `txt`, `pdf`) via OpenAI to get the answer so the researcher can use it to check the AI's answer correctness rate.
+**Program design**:  We want to create an assistant AI-Bot program which can batch process the multi choice cyber security exam questions (From different source format : `md` `url`, `html`, `txt`, `pdf`) via OpenAI to get the answers so the researcher can use it to check the AI's answer correctness rate, AI's performance on solving question on different fields and do further data analysis.
 
 [TOC]
 
@@ -29,13 +29,13 @@
 
 ### Introduction
 
-The MCQ-GPT-Bot will is an automate AI-Bot assistant AI-Bot program which provides below functions: 
+The MCQ-GPT-Bot will is an automate AI-Bot assistant program which provides below functions: 
 
-- Parse multi-choice-questions from different format data source to build the standard question bank files for further process such as training.
-- If the question sources don't content the answer, use OpenAI to get the answer. 
+- Parse multi-choice-questions from different format data source to build the standard question bank files for the further process such as training (data normalization) .
+- If the question sources don't content the answer, use OpenAI to get the answer (with or without the scenario prompt) . 
 - If the question sources also provide the answer, compare with AI's answer and calculate the AI's correctness rate.
 
-The program will use the [LangChain](https://python.langchain.com/docs/get_started/introduction.html) frame work to implement the communication with the OpenAI.
+The program will use the LLM [LangChain](https://python.langchain.com/docs/get_started/introduction.html) frame work to implement the communication with the OpenAI-API.
 
 ##### Program Workflow Diagram
 
@@ -43,11 +43,11 @@ The program will follow below workflow to load the question sources, process the
 
 ![](doc/img/workflow.png)
 
-The program is a single thread program to continuous loading all the question source file/url set in the config file, convert to the standard's question format, then based on the question type setup the LLM's scenario prompt and send to the questions solver to get the AI's solution. If you have multiple OpenAI-API, you can also config multi-thread with several parser and question solver to increase the processing efficiency.
+The program is a single thread program to continuous loading all the question source files/urls set in the config file, convert to the standard question format, then based on the question type setup the LLM's scenario prompt and send to the questions solver to get the AI's solution. If you have multiple OpenAI-API, you can also config multi-thread with several parser and question solver to increase the processing efficiency.
 
 ##### AI Solution Correctness 
 
-Based on our test to applying on 500+ MCQ question, currently for different lvl difficulty cyber security question (such as CISCO-CCIE, Huawei Certified Network Associate exam, IBM Security QRadar certificate exam) , the AI can provide **60% to 80%** correctness rate. For the correctness test, please refer to the reference section: [AI Answer's Correctness rate for cyber security MCQ question test:](#ai-answer-s-correctness-rate-for-cyber-security-mcq-question-test-)
+Based on our test to applying on 500+ MCQ question, currently for different level difficulty cyber security question (such as CISCO-CCIE, Huawei Certified Network Associate exam, IBM Security QRadar certificate exam ...) , the AI can provide **60% to 80%** correctness rate. For the correctness test, please refer to the reference section: [AI Answer's Correctness rate for cyber security MCQ question test](#ai-answer-s-correctness-rate-for-cyber-security-mcq-question-test-)
 
 ##### Current Stable Program Version 
 
@@ -59,19 +59,42 @@ Based on our test to applying on 500+ MCQ question, currently for different lvl 
 
 ### Program Design 
 
-As shown in the workflow diagram, the program contents three main modules: 
+As shown in the workflow diagram, the MCQ data will be processed follow the data flow below:
 
-**QuestionParser** : Load the function data from files or URL, then use AI to parse the MCQs and generate the standard question bank data.
+```mermaid
+graph LR;
+A[MCQ data mining] -->  B
+B[MCQ data normalization] --> C
+C[MCQ data storage] --> D
+D[MCQ data analysis] --> E
+E[result archiving]
+```
 
-**McqDataManager **: Data manager to store and questions, AI's answers and format the questions. 
+The program will provide three main modules to finish the steps: 
 
-**llmMcqSolver** : load the question from the data manager, preload the MCQ questions scenario prompt to AI, then call OpenAI API to get the answer and calculate the AI's correctness rate based on the setting.
+##### QuestionParser
 
-After process, different kind of question format source will be convert to the standard question bank file format as shown blow: 
+The MCQ question data parser (QuestionParser) will do the data mining and normalization step,  it will load all the contents from MCQ source files or URL, use AI to find all the MCQs,  then generate the standard question bank data. All the questions will be formatted to below text format:
+
+```
+Question:< Question string >
+A. choice 1
+B. choice 2
+C. choice 3
+D. choice 4
+```
+
+##### McqDataManager 
+
+The MCA data manager (McqDataManger) will do the data storage and result archiving step, it will store and questions, AI's answers and format the result. As we will batch process multiple question source, the data manager will log the process progress (such as whether a source file's result has been archived) so if there is program execution interruption happens, when the user run again, the don't need to process the source from the beginning. 
+
+##### llmMcqSolver 
+
+The large language MCQ solver (llmMcqSolver) will fetch the question from the data manager, preload the MCQ questions scenario prompt to OpenAI, then call OpenAI API to get the answer and calculate the AI's correctness rate based on the setting. After process, different kind of question format source will be convert to the standard question bank file format as shown blow: 
 
 ![](doc/img/convert.png)
 
-The question bank file will be built as a text file which follow below format: 
+The question bank file (data archiving) will be built as a text file which follow below format: 
 
 ```
 Question:< Question string >
@@ -92,7 +115,7 @@ Correctness rate: <>
 
 ##### Question Solution Prompt
 
-Before we pass the question solving scenario prompt to the AI 1st, then start to process the question, the AI will provide a higher problem solving correctness rate. For example if we want to process the Cisco CCNP Security Implementing Cisco Threat Control Solutions Exam, if we pre-load the prompt to the AI: 
+Based on our test, the AI will provide a higher problem solving correctness rate if we load a problem solving scenario prompt to the AI before we pass the real MCQ question to llmMcqSolver. For example if we want to process the Cisco CCNP Security Implementing Cisco Threat Control Solutions Exam, when we pre-load the below CCPN prompt to the AI before pass the question to AI: 
 
 ```
 CCNA_SOL_TEMPLATE = """You are a helpful assistant who find the answer of the Cisco
@@ -103,7 +126,7 @@ separated list.
 """
 ```
 
-The correctness rate will increate from (10/24) **41.66%** to (12/24)**50.0%** if we test 24 questions. If you load a good scenario prompt to the AI, AI will understand the question better especially for the worlds abbreviation.
+The correctness rate will increate from (10/24) **41.66%** (If we don't set scenario prompt) to (12/24) **50.0%** if we test 24 questions. If you load a good scenario prompt to the AI, AI will understand the question better especially for the worlds abbreviations appear in the question.
 
 
 
@@ -112,7 +135,7 @@ The correctness rate will increate from (10/24) **41.66%** to (12/24)**50.0%** i
 | Idx  | Program File                       | Execution Env | Description                                                  |
 | ---- | ---------------------------------- | ------------- | ------------------------------------------------------------ |
 | 1    | src/config.txt                     |               | System config file.                                          |
-| 2    | src/mcqGptBot.py                   | python 3      | Main MCQ process program                                     |
+| 2    | src/mcqGptBot.py                   | python 3      | Main MCQ auto batch process program.                         |
 | 3    | src/mcqGptBotUtils.py              | python 3      | Provide different OpenAI utility function modules used by the MCQ-GPT-Bot modules. |
 | 4    | src/mcqGptBotGlobal.py             | python 3      | System global file, the system config file's contents will be saved in the global parameters. |
 | 5    | lib/ConfigLoader.py                | python 3      | Configuration file loading module.                           |
@@ -143,7 +166,7 @@ pip install --upgrade openai
 pip install langchain
 ```
 
-4. **Valid Open AI API key** : https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key
+4. **Valid OpenAI-API key** : https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key
 
 ###### Hardware Needed : None
 
@@ -155,9 +178,9 @@ pip install langchain
 
 Please follow below steps to process the MCQ source files:
 
-##### Step1: Copy the MCQ source file 
+##### Step1: Copy the MCQ source files
 
-Copy the MCQ files ( `*.html`, `*.txt`, `*.md`, `*.pdf` )  you want to process and `questionContents.json` to the a folder in the `src` folder (such as the `questionbank` ).  Add the files you want to process in the `questionContents.json` as below : 
+Copy the MCQ files ( `*.html`, `*.txt`, `*.md`, `*.pdf` )  you want to process and `questionContents.json` to the a folder in the `src` folder (such as the `questionbank` ).  Add/Append the files you want to process in the `questionContents.json` as below : 
 
 ```
 "name": "test_question_bank03",
@@ -165,13 +188,13 @@ Copy the MCQ files ( `*.html`, `*.txt`, `*.md`, `*.pdf` )  you want to process a
 "src": "https://www.yeahhub.com/certified-ethical-hacker-v10-multiple-choice-questions-answers-part-9/"
 ```
 
-- name : The question bank file name. 
-- type: Mcq source type (html, url, md, pdf, txt).
-- src: file name or URL
+- **name** : The question bank file name you want to archive.
+- **type**: Mcq source type ( current support type: html, url, md, pdf, txt).
+- **src**: The source file name or URL.
 
 
 
-##### Step2: Set the configuration file
+##### Step2: Set the Bot execution configuration file
 
 Rename the configuration file template `config_template.txt` to `config.txt` and add you OpenAI-API key as below:
 
@@ -181,7 +204,7 @@ Rename the configuration file template `config_template.txt` to `config.txt` and
 # key cannot be changed):
 
 # set openAI API key
-API_KEY:
+API_KEY: <Yout own OpenAI API key>
 
 # select the AI model apply to the mcq.
 AI_MODEL:gpt-3.5-turbo-16k
@@ -197,7 +220,7 @@ QS_CONT_JSON:questionContents.json
 
 
 
-##### Step3: Run the Bot to batch process all the MCQ source
+##### Step3: Run the Bot to batch process all the MCQ sources
 
 Run program:
 
@@ -205,7 +228,7 @@ Run program:
 python mcqGptBot.py
 ```
 
-The finished processed question will be saved in the text question bank file which same name as the name you set in the `questionContents.json` file. You can refer to the questionbacnk folder to check the detail. Example: 
+The processed question will be saved in the text question bank file which same name as the name you set in the `questionContents.json` file. You can refer to the questionbank folder to check the detail. Example: 
 
 `network-secuirty-quiz-questions-answers.pdf` => `test_question_bank03.txt`
 
@@ -241,7 +264,7 @@ Processing prf source file: C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank
 Question parse finish.
 ```
 
-This is normal, you need to set the payment on you openAI account. 
+This is normal, you need to update you OpenAI account to a payment account. 
 
 
 

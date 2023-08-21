@@ -73,8 +73,9 @@ CONFIG_DICT = iConfigLoader.getJson()
 API_KEY = CONFIG_DICT['API_KEY']
 os.environ["OPENAI_API_KEY"] = API_KEY
 AI_MODEL = CONFIG_DICT['AI_MODEL']
-# Question parse prompt without parse the answer.
-MCQ_Q_TEMPLATE = """Find all the multiple choice questions from the text:
+
+# Default mcq question AI prompt
+MCQ_TEMPLATE = """Find all the multiple choice questions from the text:
 "{text}", reformat them and list all the questions under below format:
 
 Question:<question string>
@@ -83,38 +84,38 @@ B.choice
 C.choice
 D.choice
 """
-# Question parse prompt with parse the answer.
-MCQ_QA_TEMPLATE = """Find all the multiple choice questions with answer from the text:
-"{text}", reformat them and list all the questions with answer under below format:
 
-Question:<question string>
-A.choice
-B.choice
-C.choice
-D.choice
-Answer:
-"""
-# Question solution template.
-MCQ_SOL_TEMPLATE = """You are a helpful assistant who find the answer of the 
+# default mcq exam scenario AI prompt
+SCE_TEMPLATE = """You are a helpful assistant who find the answer of the 
 cyber security multi choice questions. Just give the correct choice's front indicator 
 character or characters (if the question shows you need to choose more than one choice). 
 Return choice indicator character in a in a comma separated list. 
 """
 
-CCNA_SOL_TEMPLATE = """You are a helpful assistant who find the answer of the Cisco
-CCNP Security Implementing Cisco Secure Access multi choice questions. Just give the 
-correct choice's front indicator character or characters (if the question shows you 
-need to choose more than one choice). Return choice indicator character in a in a comma 
-separated list. 
-"""
-
 # question bank file
 Q_BANK_DIR = os.path.join(dirpath, CONFIG_DICT['QS_BANK_DIR'])
-# 
 FILTER_CHAR = ('#', ' ', '\n', '\r', '\t')
 
 #-------<GLOBAL VARIABLES (start with "g")>------------------------------------
 # VARIABLES are the built in data type.
 gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QS_CONT_JSON'])
+
+import mcqGptPromptRepo
+# ser the question AI prompt
+gMcqQuestionPrompt = None
+if 'MCQ_PROMPT' in CONFIG_DICT.keys() and hasattr(mcqGptPromptRepo, CONFIG_DICT['MCQ_PROMPT']):
+    gDebugPrint("Use question AI prompt: %s " % str(CONFIG_DICT['MCQ_PROMPT']))
+    gMcqQuestionPrompt = getattr(mcqGptPromptRepo, CONFIG_DICT['MCQ_PROMPT'])
+else:
+    gDebugPrint("Use default question AI prompt")
+    gMcqQuestionPrompt = MCQ_TEMPLATE
+
+gMcqScearioPrompt = None
+if 'SCE_PROMPT' in CONFIG_DICT.keys() and hasattr(mcqGptPromptRepo, CONFIG_DICT['SCE_PROMPT']):
+    gDebugPrint("Use scenario AI prompt: %s " % str(CONFIG_DICT['SCE_PROMPT']))
+    gMcqScearioPrompt = getattr(mcqGptPromptRepo, CONFIG_DICT['SCE_PROMPT'])
+else:
+    gDebugPrint("Use default question AI prompt")
+    gMcqScearioPrompt = SCE_TEMPLATE
 
 #-------<GLOBAL PARAMTERS>-----------------------------------------------------

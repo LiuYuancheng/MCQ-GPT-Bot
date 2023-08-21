@@ -126,7 +126,7 @@ separated list.
 """
 ```
 
-The correctness rate will increate from (10/24) **41.66%** (If we don't set scenario prompt) to (12/24) **50.0%** if we test 24 questions. If you load a good scenario prompt to the AI, AI will understand the question better especially for the worlds abbreviations appear in the question.
+The correctness rate will increate from (60/144) **41.66%** (If we don't set scenario prompt) to (73/144) **50.06%** if we test 144 questions. If you load a good scenario prompt to the AI, AI will understand the question better especially for the worlds abbreviations appear in the question.
 
 
 
@@ -134,14 +134,14 @@ The correctness rate will increate from (10/24) **41.66%** (If we don't set scen
 
 | Idx  | Program File                       | Execution Env | Description                                                  |
 | ---- | ---------------------------------- | ------------- | ------------------------------------------------------------ |
-| 1    | src/config.txt                     |               | System config file.                                          |
+| 1    | src/config.txt                     | txt           | System config file.                                          |
 | 2    | src/mcqGptBot.py                   | python 3      | Main MCQ auto batch process program.                         |
 | 3    | src/mcqGptBotUtils.py              | python 3      | Provide different OpenAI utility function modules used by the MCQ-GPT-Bot modules. |
 | 4    | src/mcqGptBotGlobal.py             | python 3      | System global file, the system config file's contents will be saved in the global parameters. |
 | 5    | lib/ConfigLoader.py                | python 3      | Configuration file loading module.                           |
 | 6    | lib/Log.py                         | python 3      | Log module.                                                  |
 | 7    | questionbank/*                     |               | All the question source files.                               |
-| 8    | questionbank/questionContents.json |               | Question source config json file.                            |
+| 8    | questionbank/questionContents.json | json          | Question source config json file.                            |
 
 
 
@@ -162,6 +162,7 @@ pip install unstructured
 pip install pdf2image
 pip install pdfminer
 pip install pdfminer-six
+pip install markdown
 pip install --upgrade openai
 pip install langchain
 ```

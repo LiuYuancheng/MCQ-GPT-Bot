@@ -25,8 +25,8 @@ import mcqGptBotUtils as botUtils
 class McqGPTBot(object):
 
     def __init__(self, openAIkey=None, 
-                 mcqTemplate=gv.MCQ_QA_TEMPLATE,
-                 solTemplate=gv.MCQ_SOL_TEMPLATE
+                 mcqTemplate=gv.MCQ_TEMPLATE,
+                 solTemplate=gv.SCE_TEMPLATE
                  ) -> None:
         
         self.openAIkey = openAIkey if openAIkey else gv.API_KEY
@@ -99,7 +99,9 @@ class McqGPTBot(object):
         """
         answerList = []
         correctCount = 0
-        for question in questionList:
+        questionNum = len(questionList)
+        for idx, question in enumerate(questionList):
+            gv.gDebugPrint("- start to process question %s / %s " % (str(idx+1), str(questionNum)))
             ans, aians, crt = self.mcqSolver.compareAnswer(question)
             answerList.append(aians)
             if crt: correctCount +=1
@@ -151,7 +153,8 @@ class McqGPTBot(object):
 def main():
     # mcqBot = McqGPTBot(mcqTemplate=gv.MCQ_Q_TEMPLATE)
     # mcqBot = McqGPTBot(solTemplate=gv.CCNA_SOL_TEMPLATE)
-    mcqBot = McqGPTBot()
+    mcqBot = McqGPTBot(mcqTemplate=gv.gMcqQuestionPrompt, 
+                       solTemplate=gv.gMcqScearioPrompt)
     mcqBot.loadNewMcqBanks(gv.gMcqBankContent)
     mcqBot.processMcqBanks(calCrtRate=True)
 

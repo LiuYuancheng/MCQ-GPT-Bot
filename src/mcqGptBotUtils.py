@@ -16,6 +16,7 @@
 import os
 import re
 import time
+import json
 
 # load the langchain libs
 from langchain.llms import OpenAI
@@ -37,6 +38,7 @@ from langchain.schema import BaseOutputParser
 from langchain.document_loaders import UnstructuredHTMLLoader
 from langchain.document_loaders import WebBaseLoader
 from langchain.document_loaders import UnstructuredPDFLoader
+from langchain.document_loaders import UnstructuredMarkdownLoader
 
 import mcqGPTBotGlobal as gv
 
@@ -46,12 +48,13 @@ class QuestionParser(object):
     """ Load the function data from files or URL, then use AI to parse the 
         mcqs and generate the standard question bank data.
     """
-    def __init__(self, openAIkey=None, mcqTemplate=gv.MCQ_Q_TEMPLATE) -> None:
+    def __init__(self, openAIkey=None, mcqTemplate=gv.MCQ_TEMPLATE) -> None:
         """ Init example: mcqParser = QuestionParser(openAIkey=<OpenAI-Key-String>,
             msqTemplate = <question bank string format>)
             Args:
                 openAIkey (_type_, str): openAIkey. Defaults to None.
-                mcqTemplate (_type_, str): question parse template. Defaults to gv.MCQ_Q_TEMPLATE.
+                mcqTemplate (_type_, str): question parse prompt template. 
+                    Defaults to gv.MCQ_Q_TEMPLATE.
         """
         if openAIkey: os.environ["OPENAI_API_KEY"] = openAIkey
         # Define StuffDocumentsChain
@@ -89,11 +92,35 @@ class QuestionParser(object):
             gv.gDebugPrint('Question parse finish.')
         elif srcType == 'pdf':
             if os.path.exists(src):
-                gv.gDebugPrint('Processing prf source file: %s' % str(src), logType=gv.LOG_INFO)
+                gv.gDebugPrint('Processing pdf source file: %s' % str(src), logType=gv.LOG_INFO)
                 loader = UnstructuredPDFLoader(src)
                 data = loader.load_and_split()
                 result = self.stuff_chain.run(data)
                 gv.gDebugPrint('Question parse finish.')
+        elif srcType == 'json':
+            if os.path.exists(src):
+                result =''
+                gv.gDebugPrint('Processing json source file: %s' % str(src), logType=gv.LOG_INFO)
+                with open(src, "r") as fh:
+                    data = json.load(fh)
+                    choiceUp = 'ABCDEFGH'
+                    for item in data:
+                        result += 'Question: %s \n' % item['Question']
+                        choices = item['Choice']
+                        for i, val in enumerate(choices):
+                            if val[1] == '.' and str(val[0]).upper() in choiceUp:
+                                result += '%s \n' % val
+                            else:
+                                result += '%s.%s \n' % (choiceUp[i], val)
+                        if 'Answer' in item.keys():
+                            result += 'Answer: %s \n' % item['Answer']
+                return result
+        elif srcType == 'md':
+            if os.path.exists(src):
+                gv.gDebugPrint('Processing markrdown source file: %s' % str(src), logType=gv.LOG_INFO)
+                loader = UnstructuredMarkdownLoader(src)
+                data = loader.load()
+                result = self.stuff_chain.run(data)
         else:
             gv.gDebugPrint("The input src type [%s] is not valid" % str(srcType))
         time.sleep(0.2) # sleep a short time interval to avoid reach the openAI access limitation
@@ -203,7 +230,7 @@ class CommaSeparatedListOutputParser(BaseOutputParser):
 class llmMcqSolver(object):
     """ MCQ solving module. """
 
-    def __init__(self, openAIkey=None, systemTemplate=gv.MCQ_SOL_TEMPLATE) -> None:
+    def __init__(self, openAIkey=None, systemTemplate=gv.SCE_TEMPLATE) -> None:
         if openAIkey: os.environ["OPENAI_API_KEY"] = openAIkey
         sysTemplate = SystemMessagePromptTemplate.from_template(systemTemplate)
         human_template = "{text}"
@@ -218,10 +245,19 @@ class llmMcqSolver(object):
         if 'Answer:' in questionString: questionString = questionString.split('Answer:')[0]
         answerList = self.llmChain.run(questionString)
         time.sleep(0.4) # sleep a short time interval to avoid reach the openAI access limitation
-        if answerList: 
-            answerList.sort()
-            # only find the choice indicator:
-            reusltChars = re.findall(r'\b[A-H]+\b', ''.join(answerList))
+        if answerList and len(answerList) > 0:
+            answerIndicator = []
+            for val in answerList:
+                val = val.replace(' ', '')
+                if len(val) == 1:
+                    answerIndicator.append(val)
+                elif len(val) > 1:
+                    if '.' in val:
+                        indicator = val.split('.', 1)[0]
+                        if indicator: answerIndicator.append(indicator)
+            # only find the choice indicator and remove duplicate:
+            reusltChars = re.findall(r'\b[A-H]+\b', 
+                                     ''.join(sorted(set(answerIndicator), key=answerIndicator.index)))
             return ''.join(reusltChars) 
         else:
             gv.gDebugPrint('AI not able to find answer for question: %s ' % questionString)

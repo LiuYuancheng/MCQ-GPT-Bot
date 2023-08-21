@@ -1,0 +1,101 @@
+# Src:C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\questionbank_13.md
+Question: Port scanning can be used as part of a technical assessment to determine network vulnerabilities. The TCP XMAS scan is used to identify listening ports on the targeted system. If a scanned port is open, what happens?
+A. The port will ignore the packets.
+B. The port will send an RST.
+C. The port will send an ACK.
+D. The port will send a SYN.
+Answer: B
+AiAns:B
+
+Question: Which of the following is a passive wireless packet analyzer that works on Linux-based systems?
+A. OpenVAS
+B. Burp Suite
+C. tshark
+D. Kismet
+Answer: D
+AiAns:C
+
+Question: Which service in a PKI will vouch for the identity of an individual or company?
+A. CBC
+B. KDC
+C. CA
+D. CR
+Answer: C
+AiAns:C
+
+Question: What mechanism in Windows prevents a user from accidentally executing a potentially malicious batch (.bat) or PowerShell (.ps1) script?
+A. User Access Control (UAC)
+B. Data Execution Prevention (DEP)
+C. Address Space Layout Randomization (ASLR)
+D. Windows firewall
+Answer: B
+AiAns:A
+
+Question: Seth is starting a penetration test from inside the network. He hasn't been given any information about the network. What type of test is he conducting?
+A. Internal, Blackbox
+B. External, Blackbox
+C. External, Whitebox
+D. Internal, Whitebox
+Answer: A
+AiAns:D
+
+Question: What is the code written for?
+A. Buffer Overflow
+B. Encryption
+C. Denial-of-service (DoS)
+D. Bruteforce
+Answer: A
+AiAns:B
+
+
+AI Answer compare (correct / total) : 2 / 6 Correctness rate : 0.3333333333333333# Src:C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\questionbank_13.md
+Question: Port scanning can be used as part of a technical assessment to determine network vulnerabilities. The TCP XMAS scan is used to identify listening ports on the targeted system. If a scanned port is open, what happens?
+A. The port will ignore the packets.
+B. The port will send an RST.
+C. The port will send an ACK.
+D. The port will send a SYN.
+Answer: B
+AiAns:B
+
+Question: Which of the following is a passive wireless packet analyzer that works on Linux-based systems?
+A. OpenVAS
+B. Burp Suite
+C. tshark
+D. Kismet
+Answer: D
+AiAns:C
+
+Question: Which service in a PKI will vouch for the identity of an individual or company?
+A. CBC
+B. KDC
+C. CA
+D. CR
+Answer: C
+AiAns:C
+
+Question: What mechanism in Windows prevents a user from accidentally executing a potentially malicious batch (.bat) or PowerShell (.ps1) script?
+A. User Access Control (UAC)
+B. Data Execution Prevention (DEP)
+C. Address Space Layout Randomization (ASLR)
+D. Windows firewall
+Answer: B
+AiAns:A
+
+Question: Seth is starting a penetration test from inside the network. He hasn't been given any information about the network. What type of test is he conducting?
+A. Internal, Blackbox
+B. External, Blackbox
+C. External, Whitebox
+D. Internal, Whitebox
+Answer: A
+AiAns:D
+
+Question: What is the code written for?
+A. Buffer Overflow
+B. Encryption
+C. Denial-of-service (DoS)
+D. Bruteforce
+Answer: A
+AiAns:A
+
+
+AI Answer compare (correct / total) : 3 / 6 Correctness rate : 0.5

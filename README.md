@@ -138,10 +138,11 @@ The correctness rate will increate from (60/144) **41.66%** (If we don't set sce
 | 2    | src/mcqGptBot.py                   | python 3      | Main MCQ auto batch process program.                         |
 | 3    | src/mcqGptBotUtils.py              | python 3      | Provide different OpenAI utility function modules used by the MCQ-GPT-Bot modules. |
 | 4    | src/mcqGptBotGlobal.py             | python 3      | System global file, the system config file's contents will be saved in the global parameters. |
-| 5    | lib/ConfigLoader.py                | python 3      | Configuration file loading module.                           |
-| 6    | lib/Log.py                         | python 3      | Log module.                                                  |
-| 7    | questionbank/*                     |               | All the question source files.                               |
-| 8    | questionbank/questionContents.json | json          | Question source config json file.                            |
+| 5    | src/mcqGptPromptRepo.py            | python 3      | Repo to save the customized AI prompt.                       |
+| 6    | lib/ConfigLoader.py                | python 3      | Configuration file loading module.                           |
+| 7    | lib/Log.py                         | python 3      | Log module.                                                  |
+| 8    | questionbank/*                     |               | All the question source files.                               |
+| 9    | questionbank/questionContents.json | json          | Question source config json file.                            |
 
 
 
@@ -217,6 +218,14 @@ QS_BANK_DIR:questionbank
 # The json file which contents the source files information need to process in the 
 # question source folder.
 QS_CONT_JSON:questionContents.json
+
+# Define the MCQ question AI prompt constant name in <mcqGptPromptRepo.py> will be used, 
+# if not defined, will use the default one 'MCQ_TEMPLATE' in the <mcqGPTBotGlobal.py>
+MCQ_PROMPT:MCQ_QA_PROMPT
+
+# Define the MCQ solving scenario AI prompt constant name in <mcqGptPromptRepo.py> will 
+# be used, if not defined, will use the default one 'SCE_TEMPLATE' in the <mcqGPTBotGlobal.py>
+SCE_PROMPT:CCNP_SOL_PROMPT
 ```
 
 

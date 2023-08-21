@@ -1,0 +1,52 @@
+[
+    {
+        "Question": "What is the role of test automation in security testing?",
+        "Choice": [
+            "A. It is an option but it tends to be very expensive.",
+            "B. It should be used exclusively. Manual testing is outdated because of low speed and possible test setup inconsistencies.",
+            "C. Test automation is not usable in security due to the complexity of the tests.",
+            "D. It can accelerate benchmark tests and repeat them with a consistent test setup. But it cannot replace manual testing completely."
+        ],
+        "Answer": "D"
+    },
+    {
+        "Question": "A hacker has successfully infected an internet-facing server which he will then use to send junk mail, take part in coordinated attacks, or host junk email content. Which sort of trojan infects this server?",
+        "Choice": [
+            "Botnet Trojan",
+            "Turtle Trojans",
+            "Banking Trojans",
+            "Ransomware Trojans"
+        ],
+        "Answer": "A"
+    },
+    {
+        "Question": "In order to have an anonymous Internet surf, which of the following is best choice?",
+        "Choice": [
+            "A. Use SSL sites when entering personal information",
+            "B. Use Tor network with multi-node",
+            "C. Use shared WiFi",
+            "D. Use public VPN"
+        ],
+        "Answer": "B"
+    },
+    {
+        "Question": "In which phase of the ethical hacking process can Google hacking be employed? This is a technique that involves manipulating a search string with specific operators to search for vulnerabilities. Example:allintitle: root passwd",
+        "Choice": [
+            "Maintaining Access",
+            "Gaining Access",
+            "Reconnaissance",
+            "Scanning and Enumeration"
+        ],
+        "Answer": "C"
+    },
+    {
+        "Question": "How can rainbow tables be defeated?",
+        "Choice": [
+            "A. Password salting",
+            "B. Use of non-dictionary words",
+            "C. All uppercase character passwords",
+            "D. Lockout accounts under brute force password cracking attempts"
+        ],
+        "Answer": "A"
+    }
+]

@@ -1,0 +1,85 @@
+# Src:C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\questionbank_12.json
+Question: What is the role of test automation in security testing? 
+A. It is an option but it tends to be very expensive. 
+B. It should be used exclusively. Manual testing is outdated because of low speed and possible test setup inconsistencies. 
+C. Test automation is not usable in security due to the complexity of the tests. 
+D. It can accelerate benchmark tests and repeat them with a consistent test setup. But it cannot replace manual testing completely. 
+Answer: D 
+AiAns:D
+
+Question: A hacker has successfully infected an internet-facing server which he will then use to send junk mail, take part in coordinated attacks, or host junk email content. Which sort of trojan infects this server? 
+A.Botnet Trojan 
+B.Turtle Trojans 
+C.Banking Trojans 
+D.Ransomware Trojans 
+Answer: A 
+AiAns:A
+
+Question: In order to have an anonymous Internet surf, which of the following is best choice? 
+A. Use SSL sites when entering personal information 
+B. Use Tor network with multi-node 
+C. Use shared WiFi 
+D. Use public VPN 
+Answer: B 
+AiAns:B
+
+Question: In which phase of the ethical hacking process can Google hacking be employed? This is a technique that involves manipulating a search string with specific operators to search for vulnerabilities. Example:allintitle: root passwd 
+A.Maintaining Access 
+B.Gaining Access 
+C.Reconnaissance 
+D.Scanning and Enumeration 
+Answer: C 
+AiAns:C
+
+Question: How can rainbow tables be defeated? 
+A. Password salting 
+B. Use of non-dictionary words 
+C. All uppercase character passwords 
+D. Lockout accounts under brute force password cracking attempts 
+Answer: A 
+AiAns:A
+
+
+AI Answer compare (correct / total) : 5 / 5 Correctness rate : 1.0# Src:C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\questionbank_12.json
+Question: What is the role of test automation in security testing? 
+A. It is an option but it tends to be very expensive. 
+B. It should be used exclusively. Manual testing is outdated because of low speed and possible test setup inconsistencies. 
+C. Test automation is not usable in security due to the complexity of the tests. 
+D. It can accelerate benchmark tests and repeat them with a consistent test setup. But it cannot replace manual testing completely. 
+Answer: D 
+AiAns:D
+
+Question: A hacker has successfully infected an internet-facing server which he will then use to send junk mail, take part in coordinated attacks, or host junk email content. Which sort of trojan infects this server? 
+A.Botnet Trojan 
+B.Turtle Trojans 
+C.Banking Trojans 
+D.Ransomware Trojans 
+Answer: A 
+AiAns:A
+
+Question: In order to have an anonymous Internet surf, which of the following is best choice? 
+A. Use SSL sites when entering personal information 
+B. Use Tor network with multi-node 
+C. Use shared WiFi 
+D. Use public VPN 
+Answer: B 
+AiAns:B
+
+Question: In which phase of the ethical hacking process can Google hacking be employed? This is a technique that involves manipulating a search string with specific operators to search for vulnerabilities. Example:allintitle: root passwd 
+A.Maintaining Access 
+B.Gaining Access 
+C.Reconnaissance 
+D.Scanning and Enumeration 
+Answer: C 
+AiAns:C
+
+Question: How can rainbow tables be defeated? 
+A. Password salting 
+B. Use of non-dictionary words 
+C. All uppercase character passwords 
+D. Lockout accounts under brute force password cracking attempts 
+Answer: A 
+AiAns:A
+
+
+AI Answer compare (correct / total) : 5 / 5 Correctness rate : 1.0

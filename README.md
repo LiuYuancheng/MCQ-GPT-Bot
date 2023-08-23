@@ -1,6 +1,8 @@
 # MCQ-GPT-Bot
 
-**Program design**:  We want to create an assistant AI-Bot program which can batch process the multi choice cyber security exam questions (From different source format : `md` `url`, `html`, `txt`, `pdf`) via OpenAI to get the answers so the researcher can use it to check the AI's answer correctness rate, AI's performance on solving question on different fields and do further data analysis.
+**Program design**:  We want to create an assistant AI-Bot program which can batch process the multi choice cyber security exam questions (From different source format : `md` `url`, `html`, `txt`, `pdf`) via OpenAI to get the answers so the researcher can use it to check the AI's answer correctness rate, AI's performance on solving question on different fields and do further data analysis. 
+
+ ![](doc/img/logo.png)
 
 [TOC]
 

@@ -24,32 +24,40 @@
   </li>
 
   <li class="list-group-item">
-
-    <h4> Step 1: Select the MCQ source you want to parse: </h4>
-    <form>
+    <h4> Step 1. Select the MCQ source you want to parse </h4>
+    
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" class="custom-control-input" id="customRadio1" name="example" 
-          value="customEx" onchange="toggleDiv('customRadio1')">
+        <input type="radio" class="custom-control-input" id="customRadio1" name="example" value="customEx"
+          onchange="toggleDiv('customRadio1')">
         <label class="custom-control-label" for="customRadio1"> Upload MCQ-Src file</label>
       </div>
 
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" class="custom-control-input" id="customRadio2" name="example" 
-          value="customEx" onchange="toggleDiv('customRadio2')">
+        <input type="radio" class="custom-control-input" id="customRadio2" name="example" value="customEx"
+          onchange="toggleDiv('customRadio2')">
         <label class="custom-control-label" for="customRadio2"> Parse Question from URL </label>
       </div>
 
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" class="custom-control-input" id="customRadio3" name="example" 
-          value="customEx" onchange="toggleDiv('customRadio3')">
+        <input type="radio" class="custom-control-input" id="customRadio3" name="example" value="customEx"
+          onchange="toggleDiv('customRadio3')">
         <label class="custom-control-label" for="customRadio3"> Copy the Question directly </label>
       </div>
-
-      <div id="content_1" style="display: none">Content 1</div>
+      <p> </p>
+      <div id="content_1" style="display: none">
+        <form action = "/upload" method = "POST" enctype="multipart/form-data">  
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="customFile" name="file">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+          </div>
+          <p> - </p>
+          <input type = "submit" value="Upload">  
+        </div>
+        
+      </form>
       <div id="content_2" style="display: none">Content 2</div>
       <div id="content_3" style="display: none">Content 3</div>
-
-    </form>
+      <p> </p>
   </li>
 
   <li class="list-group-item">
@@ -62,7 +70,7 @@
 </ul>
 
 <script>
-  function toggleDiv(radioName) { 
+  function toggleDiv(radioName) {
     document.getElementById("content_1").style.display = "none";
     document.getElementById("content_2").style.display = "none";
     document.getElementById("content_3").style.display = "none";
@@ -73,7 +81,15 @@
     } else if (radioName === "customRadio3") {
       document.getElementById("content_3").style.display = "block";
     }
-}
+  }
+
+  // Add the following code if you want the name of the file appear on select
+  $(".custom-file-input").on("change", function () {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+  });
+
+
 </script>
 
 

@@ -103,6 +103,9 @@ APP_SEC_KEY = 'secrete-key-goes-here'
 UPDATE_PERIODIC = 15
 COOKIE_TIME = 30
 
+UPLOAD_FOLDER = os.path.join(dirpath, 'uploadFolder')
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'html', 'md', 'pdf'}
+
 #-------<GLOBAL VARIABLES (start with "g")>------------------------------------
 # VARIABLES are the built in data type.
 gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QS_CONT_JSON'])

@@ -47,11 +47,16 @@ def index():
     return render_template('index.html')
 
 #-----------------------------------------------------------------------------
-@app.route('/schedulermgmt')
+@app.route('/introduction')
+def introduction():
+    return render_template('introduction.html')
+
+
+#-----------------------------------------------------------------------------
+@app.route('/introduction')
 def schedulermgmt():
-    scheudlerInfoDict = gv.iDataMgr.getPeersInfo()
-    gv.gDebugPrint("Receive the peer Info %s" %str(scheudlerInfoDict), logType=gv.LOG_INFO)
-    return render_template('schedulermgmt.html', posts=scheudlerInfoDict)
+    return render_template('introduction.html')
+
 
 #-----------------------------------------------------------------------------
 @app.route('/<int:postID>')

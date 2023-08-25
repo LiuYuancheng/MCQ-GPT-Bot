@@ -72,7 +72,6 @@ def upload():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return render_template('index.html')
 
-
 #-----------------------------------------------------------------------------
 @app.route('/introduction')
 def schedulermgmt():

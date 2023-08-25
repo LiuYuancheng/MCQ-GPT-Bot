@@ -1,6 +1,6 @@
 {% extends 'mgmbase.html' %}
 
-{% block title %} User Action scheduler Monitor {% endblock %}
+{% block title %} MCQ Solver Bot {% endblock %}
 
 {% block style%}
 <style>
@@ -29,19 +29,19 @@
       <div class="custom-control custom-radio custom-control-inline">
         <input type="radio" class="custom-control-input" id="customRadio1" name="example" value="customEx"
           onchange="toggleDiv('customRadio1')">
-        <label class="custom-control-label" for="customRadio1"> Upload MCQ-Src file</label>
+        <label class="custom-control-label" for="customRadio1"> Upload MCQ-Src file need to parse: </label>
       </div>
 
       <div class="custom-control custom-radio custom-control-inline">
         <input type="radio" class="custom-control-input" id="customRadio2" name="example" value="customEx"
           onchange="toggleDiv('customRadio2')">
-        <label class="custom-control-label" for="customRadio2"> Parse Question from URL </label>
+        <label class="custom-control-label" for="customRadio2"> Parse questions from MCQ-web url: </label>
       </div>
 
       <div class="custom-control custom-radio custom-control-inline">
         <input type="radio" class="custom-control-input" id="customRadio3" name="example" value="customEx"
           onchange="toggleDiv('customRadio3')">
-        <label class="custom-control-label" for="customRadio3"> Copy the Question directly </label>
+        <label class="custom-control-label" for="customRadio3"> Copy the questions contents directly: </label>
       </div>
       <p> </p>
       <div id="content_1" style="display: none">
@@ -49,14 +49,30 @@
           <div class="custom-file">
             <input type="file" class="custom-file-input" id="customFile" name="file">
             <label class="custom-file-label" for="customFile">Choose file</label>
+            <p> </p>
+            <input type = "submit" value="Upload">  
           </div>
-          <p> - </p>
-          <input type = "submit" value="Upload">  
         </div>
-        
       </form>
-      <div id="content_2" style="display: none">Content 2</div>
-      <div id="content_3" style="display: none">Content 3</div>
+      <div id="content_2" style="display: none">
+        <form>
+          <label for="mcqurl">Input a MCQ web URL:</label>
+          <input type="url" id="mcqurl" name="mcqurl" style="width: 50%;"><br><br>
+          <input type="submit">
+        </form>
+      </div>
+      <div id="content_3" style="display: none">
+
+        <form>
+          <div class="form-group">
+            <label for="contents"> MCQ contents:</label>
+            <textarea class="form-control" rows="5" id="contents">--- remote this line and copy the MCQ contents here ---
+            </textarea>
+            <input type="submit">
+          </div>
+        </form>
+
+      </div>
       <p> </p>
   </li>
 

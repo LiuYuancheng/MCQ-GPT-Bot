@@ -37,7 +37,11 @@ The MCQ-GPT-Bot will is an automate AI-Bot assistant program which provides belo
 - If the question sources don't content the answer, use OpenAI to get the answer (with or without the scenario prompt) . 
 - If the question sources also provide the answer, compare with AI's answer and calculate the AI's correctness rate.
 
-The program will use the LLM [LangChain](https://python.langchain.com/docs/get_started/introduction.html) frame work to implement the communication with the OpenAI-API.
+The program will use the LLM [LangChain](https://python.langchain.com/docs/get_started/introduction.html) frame work to implement the communication with the OpenAI-API.  We will also provide a web UI (under development) for the researcher to test their prompt or normal user who want to do quick test:
+
+![](doc/img/webUI.png)
+
+
 
 ##### Program Workflow Diagram
 

@@ -132,6 +132,10 @@
     // section of the page.
     socket.on('serv_response', function(msg, cb) {
         $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
+        if (msg.data == 'Downloading result...') {
+          socket.emit('cli_request', {data: 'download'});
+        }
+
         if (cb)
             cb();
     });

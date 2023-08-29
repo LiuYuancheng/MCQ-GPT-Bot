@@ -104,6 +104,8 @@ UPDATE_PERIODIC = 15
 COOKIE_TIME = 30
 
 UPLOAD_FOLDER = os.path.join(dirpath, 'uploadFolder')
+DOWNLOAD_FOLDER = os.path.join(dirpath, 'downloadFolder')
+
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'html', 'md', 'pdf', 'json'}
 
 #-------<GLOBAL VARIABLES (start with "g")>------------------------------------

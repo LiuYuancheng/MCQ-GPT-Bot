@@ -24,7 +24,7 @@ import threading
 from random import randint
 
 from datetime import timedelta, datetime
-from flask import Flask, render_template, request, flash, url_for, redirect, session
+from flask import Flask, render_template, request, flash, url_for, redirect, session, send_file
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit # pip install Flask-SocketIO==5.3.5
 
@@ -83,9 +83,17 @@ def index():
 @socketio.event
 def cli_request(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('serv_response',
-         {'data': message['data'], 'count': session['receive_count']})
-
+    if message['data'] == 'download':
+        if gv.gSrceName:
+            bankName = str(gv.gSrceName).rsplit('.', 1)[0] + '_result'
+            bankFilePath = os.path.join(gv.DOWNLOAD_FOLDER, bankName+'.txt')
+            if os.path.exists(bankFilePath):
+                gv.gDebugPrint("Download the file.")
+                return send_file(bankFilePath, as_attachment=True)
+    else:
+        emit('serv_response',
+            {'data': message['data'], 'count': session['receive_count']})
+    
 @socketio.on('startprocess')
 def startProcess(data):
     print('received message: ' + str(data))
@@ -100,7 +108,6 @@ def connect():
     #     if thread is None:
     #         thread = socketio.start_background_task(background_thread)
     emit('serv_response', {'data': 'MCQ-Solver Ready', 'count': gv.gWeblogCount})
-
 
 #-----------------------------------------------------------------------------
 @app.route('/introduction')

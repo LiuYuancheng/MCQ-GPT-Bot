@@ -16,6 +16,7 @@
 # CSS lib [bootstrap]: https://www.w3schools.com/bootstrap4/default.asp
 
 # https://www.w3schools.com/howto/howto_css_form_on_image.asp
+# https://medium.com/the-research-nest/how-to-log-data-in-real-time-on-a-web-page-using-flask-socketio-in-python-fb55f9dad100
 
 import os
 import json
@@ -26,7 +27,10 @@ from datetime import timedelta, datetime
 from flask import Flask, render_template, request, flash, url_for, redirect, session
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit # pip install Flask-SocketIO==5.3.5
+
 import mcqGptAppGlobal as gv
+import mcqGptAppDataMgr as dataManager
+
 
 TEST_MD = False # Test mode flag.
 async_mode = None
@@ -39,6 +43,12 @@ def createApp():
     app.config['SECRET_KEY'] = gv.APP_SEC_KEY
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=gv.COOKIE_TIME)
     app.config['UPLOAD_FOLDER'] = gv.UPLOAD_FOLDER
+
+    # 
+    gv.iDataMgr = dataManager.DataManager(None)
+    if not gv.iDataMgr: exit()
+    gv.iDataMgr.start()
+
     return app
 
 def checkFile(filename):
@@ -53,13 +63,14 @@ def background_thread():
         socketio.sleep(3)
         count += 1
         price = randint(3,10)
-        socketio.emit('my_response',
+        socketio.emit('serv_response',
                       {'data': 'Bitcoin current price (USD): ' + str(price), 'count': count})
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 app = createApp()
 socketio = SocketIO(app, async_mode=async_mode)
+gv.iSocketIO = socketio
 thread = None
 threadLock = threading.Lock()
 
@@ -67,34 +78,28 @@ threadLock = threading.Lock()
 # web home request handling functions. 
 @app.route('/')
 def index():
-    return render_template('index.html', async_mode=socketio.async_mode)
+    return render_template('index.html', async_mode=socketio.async_mode, posts=None)
 
 @socketio.event
-def my_event(message):
+def cli_request(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
+    emit('serv_response',
          {'data': message['data'], 'count': session['receive_count']})
 
-
-@socketio.on('test_message')
-def handle_message(data):
+@socketio.on('startprocess')
+def startProcess(data):
     print('received message: ' + str(data))
-    emit('test_response', {'data': 'Test response sent'})
-
-
-# Broadcast a message to all clients
-@socketio.on('broadcast_message')
-def handle_broadcast(data):
-    print('received: ' + str(data))
-    emit('broadcast_response', {'data': 'Broadcast sent'}, broadcast=True)
+    gv.iDataMgr.startProcess()
+    emit('startprocess', {'data': 'Start Process file: %s' %str(gv.gSrceName)})
 
 @socketio.event
 def connect():
-    global thread
-    with threadLock:
-        if thread is None:
-            thread = socketio.start_background_task(background_thread)
-    emit('my_response', {'data': 'Connected', 'count': 0})
+    gv.gWeblogCount = 0
+    # global thread
+    # with threadLock:
+    #     if thread is None:
+    #         thread = socketio.start_background_task(background_thread)
+    emit('serv_response', {'data': 'MCQ-Solver Ready', 'count': gv.gWeblogCount})
 
 
 #-----------------------------------------------------------------------------
@@ -104,6 +109,7 @@ def introduction():
 
 @app.route('/upload', methods = ['POST', 'GET'])  
 def upload():
+    posts = None
     if request.method == 'POST':
         file = request.files['file']
         print(file.filename)
@@ -113,7 +119,10 @@ def upload():
         if file and checkFile(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    return render_template('index.html')
+            gv.gSrceName = filename
+            gv.gSrcType = filename.rsplit('.', 1)[1].lower()
+            posts = {'filename': str(filename)}
+    return render_template('index.html', posts=posts)
 
 #-----------------------------------------------------------------------------
 @app.route('/introduction')

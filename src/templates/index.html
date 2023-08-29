@@ -78,22 +78,20 @@
 
   <li class="list-group-item">
     <h4> Step 2. Process the MCQ source by Open-AI</h4>
-    <p>
-      Async mode is: <b>{{ async_mode }}</b><br>
-    </p>
-    <h2>Send:</h2>
-    <form id="test" method="POST" action="#">
-        <input type="submit" value="Test">
-    </form>
-    <form id="broadcast" method="POST" action="#">
-        <input type="submit" value="Broadcast">
-    </form>
-    <h2>Receive:</h2>
-    <div id="log"></div>
   
+    {% if posts is not none %}
+      <p> <b> Current uploaded src: </b> {{ posts['filename'] }} </p>
+      <form id="startprocess" method="POST" action="#">
+        <input type="submit" value="Start">
+      </form>
+    {% else %}
+      <p> Please upload or insert a MCQ source in step 1 </p>
+    {% endif %}
+    <p> <b>Process Log: </b></p>
+    <div id="log"></div>
   </li>
-
-</ul>
+  
+  </ul>
 
 <script>
   function toggleDiv(radioName) {
@@ -125,38 +123,30 @@
     // The callback function is invoked when a connection with the
     // server is established.
     socket.on('connect', function() {
-        socket.emit('my_event', {data: 'I\'m connected!'});
+        socket.emit('cli_request', {data: 'I\'m connected!'});
     });
 
     // Event handler for server sent data.
     // The callback function is invoked whenever the server emits data
     // to the client. The data is then displayed in the "Received"
     // section of the page.
-    socket.on('my_response', function(msg, cb) {
+    socket.on('serv_response', function(msg, cb) {
         $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
         if (cb)
             cb();
     });
 
     // Test response received from server is handled here
-    socket.on('test_response', function(msg) {
-        $('#log').append('<br>' + $('<div/>').text(msg.data).html());
-    })
-
-    // Broadcast response from server is handled here
-    socket.on('broadcast_response', function(msg) {
+    socket.on('startprocess', function(msg) {
         $('#log').append('<br>' + $('<div/>').text(msg.data).html());
     })
 
     // Handlers for the different forms in the page.
     // These accept data from the user and send it to the server in a
     // variety of ways
-    $('form#test').submit(function(event) {
-        socket.emit('test_message', {data: 'Test message sent'});
-        return false;
-    });
-    $('form#broadcast').submit(function(event) {
-        socket.emit('broadcast_message', {data: 'broadcast triggered'});
+    $('form#startprocess').submit(function(event) {
+        document.getElementById('log').innerHTML = ""
+        socket.emit('startprocess', {data: 'Start to process file'});
         return false;
     });
 });

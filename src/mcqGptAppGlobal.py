@@ -104,7 +104,7 @@ UPDATE_PERIODIC = 15
 COOKIE_TIME = 30
 
 UPLOAD_FOLDER = os.path.join(dirpath, 'uploadFolder')
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'html', 'md', 'pdf'}
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'html', 'md', 'pdf', 'json'}
 
 #-------<GLOBAL VARIABLES (start with "g")>------------------------------------
 # VARIABLES are the built in data type.
@@ -128,4 +128,10 @@ else:
     gDebugPrint("Use default question AI prompt")
     gMcqScearioPrompt = SCE_TEMPLATE
 
+gWeblogCount = 0 
+gSrceName = None
+gSrcType = None
+
 #-------<GLOBAL PARAMTERS>-----------------------------------------------------
+iSocketIO = None
+iDataMgr = None

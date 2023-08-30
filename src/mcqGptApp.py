@@ -70,11 +70,18 @@ def index():
                            async_mode=socketio.async_mode, 
                            posts=None)
 
-@app.route('/introduction')
-def introduction():
-    return render_template('introduction.html', posts=None)
-
-@app.route('/upload', methods = ['POST', 'GET'])  
+@app.route('/mdselect', methods = ['POST', 'GET'])  
+def mdselect():
+    posts = None
+    if request.method == 'POST':
+        option = request.form['options']
+        if gv.iDataMgr:
+            gv.gParserMode = 1 if option =='mode1'else 2
+            gv.iDataMgr.reInitQuestionParser(mode=gv.gParserMode)
+            posts = {'mode': gv.gParserMode}
+    return render_template('index.html', posts=posts)
+    
+@app.route('/fileupload', methods = ['POST', 'GET'])  
 def fileupload():
     posts = None
     if request.method == 'POST':
@@ -104,6 +111,10 @@ def urlupload():
         gv.gRstPath = None
         posts = {'filename': gv.gSrceName}
     return render_template('index.html', posts=posts)
+
+@app.route('/introduction')
+def introduction():
+    return render_template('introduction.html', posts=None)
 
 #-----------------------------------------------------------------------------
 # socketIO communication handling functions. 

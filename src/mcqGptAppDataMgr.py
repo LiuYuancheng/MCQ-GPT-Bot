@@ -29,12 +29,22 @@ class DataManager(threading.Thread):
         # Init the data manager
         self.dataMgr = botUtils.McqDataManager()
         # Init the mcq question parser
+        self.mcqParserMode = 1
         self.mcqParser = botUtils.QuestionParser(openAIkey=gv.API_KEY, 
                                                  mcqTemplate=gv.MCQ_TEMPLATE)
         # Init the mcq solver
         self.mcqSolver = botUtils.llmMcqSolver(systemTemplate=gv.SCE_TEMPLATE)
         self.terminate = False
         self.startProFlg = False
+
+    def reInitQuestionParser(self, mode=1):
+        if mode == self.mcqParserMode: return
+        self.mcqParser = None
+        mcqTemplate = gv.MCQ_TEMPLATE if mode == 1 else gv.gMcqQuestionPrompt
+        self.mcqParser = botUtils.QuestionParser(openAIkey=gv.API_KEY, 
+                                            mcqTemplate=mcqTemplate)
+        self.mcqParserMode = mode
+        gv.gDebugPrint('MCQ question parser mode set to : [%s]' %str(mode) )
 
     def updateWebLog(self, logMsg):
         if gv.iSocketIO:
@@ -99,7 +109,7 @@ class DataManager(threading.Thread):
                 question. Defaults to False.
         """
         gv.gDebugPrint("Create question bank file: %s" %bankFilePath)
-        with open(bankFilePath, 'a', encoding="utf8") as fh:
+        with open(bankFilePath, 'w', encoding="utf8") as fh:
             srcLine = '# Src:'+ mcqDict['src'] +'\n'
             fh.write(srcLine)
             logAiAnswer = False

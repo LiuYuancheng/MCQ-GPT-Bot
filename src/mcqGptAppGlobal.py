@@ -130,6 +130,7 @@ else:
     gDebugPrint("Use default question AI prompt")
     gMcqScearioPrompt = SCE_TEMPLATE
 
+gParserMode = 1
 gWeblogCount = 0 
 gSrceName = None
 gSrcPath = None

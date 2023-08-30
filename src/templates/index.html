@@ -18,11 +18,31 @@
 <ul class="list-group">
 
   <li class="list-group-item">
-    <h3> MCQ Solver Bot</h3>
+    <h3> MCQ-GPT-Bot Question Solver</h3>
   </li>
 
   <li class="list-group-item">
-    <h4> Step 1. Select the MCQ source you want to parse </h4>
+    <h4> Step 1. Select the MCQ bot function mode </h4>
+    <form name="modeselect" action="/mdselect" method="POST"  onsubmit="">
+      <input type="radio" name="options" id="option1" value="mode1"> Mode-1 : Use Open-AI to find the answers and download standard databank file. <br>
+      <input type="radio" name="options" id="option2" value="mode2"> Mode-2 : Compare AI's answer with correct answer to get the correctness rate.<br>
+      <p> Current Bot mode: 
+        <b>
+          {% if posts is none %}
+            Mode-1
+          {% elif 'mode' in posts %}
+            Mode-{{posts['mode']}}
+          {%else%}
+            Mode-1
+          {% endif %}
+        </b>
+      </p>
+      <button type="submit" class="btn btn-primary"> Set MCQ-GPT-Bot mode</button>
+    </form>
+  </li>
+
+  <li class="list-group-item">
+    <h4> Step 2. Select the MCQ source you want to parse </h4>
 
     <div class="custom-control custom-radio custom-control-inline">
       <input type="radio" class="custom-control-input" id="customRadio1" name="example" value="customEx"
@@ -41,6 +61,7 @@
         onchange="toggleDiv('customRadio3')">
       <label class="custom-control-label" for="customRadio3"> Copy the questions contents directly: </label>
     </div>
+
     <p> </p>
     <div id="content_1" style="display: none">
       <form action="/fileupload" method="POST" enctype="multipart/form-data">
@@ -75,20 +96,27 @@
   </li>
 
   <li class="list-group-item">
-    <h4> Step 2. Process the MCQ source by Open-AI</h4>
-
-    {% if posts is not none %}
+    <h4> Step 3. Process the MCQ source by Open-AI</h4>
+    {% if posts is not none and 'filename' in posts %}
     <p> <b> Current uploaded src: </b> {{ posts['filename'] }} </p>
-    <form id="startprocess" method="POST" action="#">
-      <input type="submit" value="Start">
-    </form>
+    <form id="startprocess" method="POST" action="#"><input type="submit" value="Start"></form>
+    <div class="spinner-border text-primary" id="progspinner" style="display: none;"> </div>
     {% else %}
-    <p> Please upload or insert a MCQ source in step 1 </p>
+      <p> Please upload or insert a MCQ source in step 1 </p>
     {% endif %}
-    <p> <b>Process Log: </b></p>
-    <div id="log"></div>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">  
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#section1">Process Log 
+            
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div id="section1" class="container-fluid bg-info">
+      <div id="log"></div>
+    </div>
   </li>
-
 </ul>
 
 <script>
@@ -132,8 +160,9 @@
       $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
       if (msg.data == 'Downloading result...') {
         socket.emit('cli_request', { data: 'download' });
+        document.getElementById('progspinner').style.display = "none";
+        document.getElementById('startprocess').style.display = "block";
       }
-
       if (cb)
         cb();
     });
@@ -158,12 +187,13 @@
     // variety of ways
     $('form#startprocess').submit(function (event) {
       document.getElementById('log').innerHTML = ""
+      document.getElementById('progspinner').style.display = "block";
+      document.getElementById('startprocess').style.display = "none";
       socket.emit('startprocess', { data: 'Start to process file' });
+
       return false;
     });
   });
-
-
 
 </script>
 

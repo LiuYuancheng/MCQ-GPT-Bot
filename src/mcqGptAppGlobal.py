@@ -132,7 +132,9 @@ else:
 
 gWeblogCount = 0 
 gSrceName = None
+gSrcPath = None
 gSrcType = None
+gRstPath = None 
 
 #-------<GLOBAL PARAMTERS>-----------------------------------------------------
 iSocketIO = None

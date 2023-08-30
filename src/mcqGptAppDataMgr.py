@@ -112,13 +112,12 @@ class DataManager(threading.Thread):
                     fh.write(aiAnsStr)
                 fh.write('\n')
 
-
 #-----------------------------------------------------------------------------
     def processMcqFile(self):
         if gv.gSrceName and gv.gSrcType:
             bankName = str(gv.gSrceName).rsplit('.', 1)[0] + '_result'
             bankType = gv.gSrcType
-            bankSrc = os.path.join(gv.UPLOAD_FOLDER, gv.gSrceName) 
+            bankSrc = gv.gSrcPath
             gv.gDebugPrint("Start to process %s" %str(bankName), 
                           logType=gv.LOG_INFO)
             self.updateWebLog("Start to parse questions from: %s" %str(bankName))
@@ -132,6 +131,7 @@ class DataManager(threading.Thread):
             bankFilePath = os.path.join(gv.DOWNLOAD_FOLDER, bankName+'.txt')
             self._createQBfile(bankFilePath, mcqDict, aiAnsFlg=True)
             self.appendCompareResult(bankFilePath, crt, total)
+            gv.gRstPath = bankFilePath
             gv.gDebugPrint("Finished process all the questions.")
             self.updateWebLog("Finished process all the questions.")
             self.updateWebLog("Downloading result...")

@@ -66,9 +66,10 @@ threadLock = threading.Lock()
 
 @app.route('/')
 def index():
+    posts = {'mode': gv.gParserMode}
     return render_template('index.html', 
                            async_mode=socketio.async_mode, 
-                           posts=None)
+                           posts=posts)
 
 @app.route('/mdselect', methods = ['POST', 'GET'])  
 def mdselect():
@@ -100,12 +101,12 @@ def fileupload():
             posts = {'filename': gv.gSrceName}
     return render_template('index.html', posts=posts)
 
-@app.route('/urlupload', methods= ['POST', 'GET'])
+@app.route('/urlupload', methods=['POST', 'GET'])
 def urlupload():
     posts = None
     if request.method == 'POST':
         urlStr = request.form['mcqurl']
-        gv.gSrceName = 'mcq_from_url' 
+        gv.gSrceName = 'mcq_from_url'
         gv.gSrcPath = urlStr
         gv.gSrcType = 'url'
         gv.gRstPath = None

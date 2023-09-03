@@ -1,0 +1,76 @@
+# Src:C:\Works\NCL\Project\ChatGPT_on_MCQ\src\uploadFolder\questionbank_19.txt
+Question: Which of the following is an example of a protocol used in ICS communications?
+A. HTTP
+B. FTP
+C. Modbus
+D. SMTP
+Answer: C
+AiAns:C
+
+Question: At which level of the Purdue Model, are the programmable logic controllers (PLCs) typically found?
+A. Level 0
+B. Level 1
+C. Level 2
+D. Level 3
+E. Level 4
+Answer: B
+AiAns:A
+
+Question: What is the purpose of a Programmable Logic Controller (PLC) in an industrial control system?
+A. Data storage
+B. Network routing
+C. Process control
+D. User interface
+Answer: C
+AiAns:C
+
+Question: In the Modbus protocol, what type of device typically acts as the master?
+A. PLC
+B. Sensor
+C. Actuator
+D. HMI
+Answer: A
+AiAns:A
+
+Question: What does the scan time of a PLC indicate?
+A. The indexing of timers and counters
+B. The completion time of one "rung" of ladder logic
+C. The execution time of the entire program
+D. The required time for transmitted data communications to finish
+Answer: C
+AiAns:C
+
+Question: What does SCADA stand for?
+A. System Control And Data Acquisition
+B. Secure Communications And Data Analysis
+C. Supervisory Control And Data Acquisition
+D. Safety Compliance And Device Automation
+Answer: C
+AiAns:C
+
+Question: In Ethernet/IP (ENIP), what does a command id of 0x0004 refer to?
+A. List Identity
+B. List Services
+C. SendRRData
+D. SendUnitData
+Answer: B
+AiAns:A
+
+Question: MMS in IEC 61850 stands for:
+A. Manufacturing Message Specification
+B. Multi-Protocol Message Service
+C. Manufacturing Management System
+D. Media Management Service
+Answer: A
+AiAns:A
+
+Question: GOOSE in IEC 61850 stands for:
+A. Generic Object Oriented Substation Engineering
+B. Global Open Substation Environment
+C. Global Object Oriented Substation Engineering
+D. Generic Object Oriented Substation Event
+Answer: D
+AiAns:A
+
+
+AI Answer compare (correct / total) : 6 / 9 Correctness rate : 0.6666666666666666

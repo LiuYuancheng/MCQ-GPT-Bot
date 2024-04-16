@@ -2,13 +2,14 @@
 #-----------------------------------------------------------------------------
 # Name:        Multi-Choice-Question-GPT-Bot utilities 
 #
-# Purpose:     This module will provide different OpenAI utility function modules 
-#              used by the MCQ-GPT-Bot modules.
+# Purpose:     This module will provide different OpenAI utility functions such 
+#              as the input material question parser, the answer generator ...
+#              which used by the other question processing modules.
 #                
 # Author:      Yuancheng Liu
 #
 # Created:     2023/08/14
-# Version:     v_0.1.2
+# Version:     v_0.1.3
 # Copyright:   Copyright (c) 2023 LiuYuancheng
 # License:     MIT License
 #-----------------------------------------------------------------------------
@@ -64,6 +65,30 @@ class QuestionParser(object):
         self.stuff_chain = StuffDocumentsChain(llm_chain=self.llm_chain, 
                                                document_variable_name="text")
 
+    def _stuffChainProcess(self, loader, srcType='text'):
+        data = loader.load_and_split() if srcType == 'pdf' else loader.load()
+        result = self.stuff_chain.run(data)
+        gv.gDebugPrint("Question %s parse finish." %str(srcType), logType=gv.LOG_WARN)
+        return result
+
+    def _parseJsonFile(self, src):
+        """ parse MCQ questions from json file."""
+        result = ''
+        with open(src, "r") as fh:
+            data = json.load(fh)
+            choiceUp = 'ABCDEFGH'
+            for item in data:
+                result += 'Question: %s \n' % item['Question']
+                choices = item['Choice']
+                for i, val in enumerate(choices):
+                    if val[1] == '.' and str(val[0]).upper() in choiceUp:
+                        result += '%s \n' % val
+                    else:
+                        result += '%s.%s \n' % (choiceUp[i], val)
+                if 'Answer' in item.keys():
+                    result += 'Answer: %s \n' % item['Answer']
+        return result
+
 #-----------------------------------------------------------------------------
     def _parseQuestions(self, src, srcType='txt'):
         """ Parse questions with the choices from the src file/url.
@@ -75,57 +100,30 @@ class QuestionParser(object):
         """
         result = None
         srcType = str(srcType).lower()
-        if  srcType == 'txt' or srcType == 'html':
-            if os.path.exists(src):
-                gv.gDebugPrint('Processing source file: %s' % str(src), logType=gv.LOG_INFO)
-                loader = UnstructuredHTMLLoader(src, mode="elements")
-                data = loader.load()
-                result = self.stuff_chain.run(data)
-                gv.gDebugPrint('Question parse finish.')
+        if srcType in ['txt', 'html', 'pdf', 'json', 'md']:
+            if not os.path.exists(src):
+                gv.gDebugPrint('Warning: _parseQuestions()> Source file: %s not exist' % str(src), logType=gv.LOG_WARN)
+                return None
             else:
-                gv.gDebugPrint('Source file: %s not exist' % str(src))
+                gv.gDebugPrint('Processing source file: %s' % str(src), logType=gv.LOG_INFO)
+                if srcType == 'txt' or srcType == 'html':
+                    return self._stuffChainProcess(UnstructuredHTMLLoader(src, mode="elements"), srcType=srcType)
+                elif srcType == 'md':
+                    return self._stuffChainProcess(UnstructuredMarkdownLoader(src), srcType=srcType)
+                elif srcType == 'pdf':
+                    return self._stuffChainProcess(UnstructuredPDFLoader(src), srcType=srcType)
+                elif srcType == 'json':
+                    return self._parseJsonFile(src)
         elif srcType == 'url':
             gv.gDebugPrint('Processing MCQ url: %s' % str(src), logType=gv.LOG_INFO)
             loader = WebBaseLoader(src)
             data = loader.load()
             result = self.stuff_chain.run(data)
-            gv.gDebugPrint('Question parse finish.')
-        elif srcType == 'pdf':
-            if os.path.exists(src):
-                gv.gDebugPrint('Processing pdf source file: %s' % str(src), logType=gv.LOG_INFO)
-                loader = UnstructuredPDFLoader(src)
-                data = loader.load_and_split()
-                result = self.stuff_chain.run(data)
-                gv.gDebugPrint('Question parse finish.')
-        elif srcType == 'json':
-            if os.path.exists(src):
-                result =''
-                gv.gDebugPrint('Processing json source file: %s' % str(src), logType=gv.LOG_INFO)
-                with open(src, "r") as fh:
-                    data = json.load(fh)
-                    choiceUp = 'ABCDEFGH'
-                    for item in data:
-                        result += 'Question: %s \n' % item['Question']
-                        choices = item['Choice']
-                        for i, val in enumerate(choices):
-                            if val[1] == '.' and str(val[0]).upper() in choiceUp:
-                                result += '%s \n' % val
-                            else:
-                                result += '%s.%s \n' % (choiceUp[i], val)
-                        if 'Answer' in item.keys():
-                            result += 'Answer: %s \n' % item['Answer']
-                return result
-        elif srcType == 'md':
-            if os.path.exists(src):
-                gv.gDebugPrint('Processing markrdown source file: %s' % str(src), logType=gv.LOG_INFO)
-                loader = UnstructuredMarkdownLoader(src)
-                data = loader.load()
-                result = self.stuff_chain.run(data)
+            gv.gDebugPrint('Question url parse finish.')
+            return result
         else:
             gv.gDebugPrint("The input src type [%s] is not valid" % str(srcType))
-        time.sleep(0.2) # sleep a short time interval to avoid reach the openAI access limitation
-        return result
-
+            
 #-----------------------------------------------------------------------------
     def getQuestions(self, src, srcType='txt'):
         """ Get the questions list from the question source. """

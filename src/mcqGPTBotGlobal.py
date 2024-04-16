@@ -21,7 +21,7 @@ For good coding practice, follow the following naming convention:
 import os, sys
 
 print("Current working directory is : %s" % os.getcwd())
-DIR_PATH = dirpath = os.path.dirname(__file__) if os.path.dirname(__file__) else os.getcwd()
+DIR_PATH = dirpath = os.path.dirname(os.path.abspath(__file__))
 print("Current source code location : %s" % dirpath)
 APP_NAME = ('OpenAI', 'mcq_bot')
 
@@ -98,7 +98,7 @@ FILTER_CHAR = ('#', ' ', '\n', '\r', '\t')
 
 #-------<GLOBAL VARIABLES (start with "g")>------------------------------------
 # VARIABLES are the built in data type.
-gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QS_CONT_JSON'])
+gMcqBankContent = os.path.join(Q_BANK_DIR, CONFIG_DICT['QS_CONT_JSON']) if 'QS_CONT_JSON' in CONFIG_DICT.keys() else None
 
 import mcqGptPromptRepo
 # ser the question AI prompt

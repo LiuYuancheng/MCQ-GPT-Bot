@@ -23,7 +23,7 @@ import os, sys
 print("Current working directory is : %s" % os.getcwd())
 DIR_PATH = dirpath = os.path.dirname(__file__) if os.path.dirname(__file__) else os.getcwd()
 print("Current source code location : %s" % dirpath)
-APP_NAME = ('OpenAI', 'mcq_bot')
+APP_NAME = ('OpenAI', 'mcq_bot_app')
 
 TOPDIR = 'src'
 LIBDIR = 'lib'

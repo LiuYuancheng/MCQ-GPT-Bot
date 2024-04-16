@@ -165,16 +165,16 @@ def main(mode):
     elif mode == 1:
         print("Start the manual mode processing....")
         #
-        print("*\nStep2 : select the process mode (Type in the number):\n\
-          - 0. Use LLM AI to get the answer.(default) \n\
-          - 1. Compare AI result to calculate the correctness rate.")
+        print("*\nStep2 : select the process mode (Type in the number):")
+        print(" - 0. Use LLM AI to get the answer.(default)")
+        print(" - 1. Compare AI result to calculate the correctness rate.")
         pmode = int(input())
         gv.gMcqQuestionPrompt = mcqGptPromptRepo.MCQ_QA_PROMPT if pmode else mcqGptPromptRepo.MCQ_Q_PROMPT
         #
-        print("*\nStep3 : select the prompt:\n\
-          - 0. Normal security question solve prompt.(default)\n\
-          - 1. Certified Ethical Hacker exam prompt.\n\
-          - 2. CISCO CCPN network security exam promp.")
+        print("*\nStep3 : select the MCQ solution prompt:")
+        print(" - 0. Normal security question solve prompt.(default)")
+        print(" - 1. Certified Ethical Hacker exam prompt.")
+        print(" - 2. CISCO CCPN network security exam prompt.")
         prompt = int(input())
         gv.gMcqScearioPrompt = mcqGptPromptRepo.MCQ_SOL_PROMPT
         if prompt == 1:
@@ -184,14 +184,8 @@ def main(mode):
         mcqBot = McqGPTBot(mcqTemplate=gv.gMcqQuestionPrompt,
                            solTemplate=gv.gMcqScearioPrompt)
         while True:
-            print("*\nStep4.1 : Select the question bank source type (Type in the number):\n\
-                  - 0 : txt\n\
-                  - 1 : html\n\
-                  - 2 : url\n\
-                  - 3 : pdf\n\
-                  - 4 : json\n\
-                  - 5 : md\n\
-                  - 6 : exit")
+            print("*\nStep4.1 : Select the question bank source type (Type in the number):")
+            print(" - 0. txt\n - 1. html\n - 2. url\n - 3. pdf\n - 4. json\n - 5. md\n - 6. exit")
             inputVal = int(input())
             if inputVal >= 6:
                 break
@@ -213,14 +207,8 @@ def main(mode):
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
-    print("*\nStep1 : Please select the usage mode (Type in the number):\n\
-          - 0. Auto mode based on all paramters from config file.(default) \n\
-          - 1. Manual mode (user input all the parameters).")
+    print("*\nStep1 : Please select the usage mode (Type in the number):")
+    print(" - 0. Auto mode based on all paramters from config file.(default)")
+    print(" - 1. Manual mode (user input all the parameters).")
     mode = int(input())
     main(mode)
-
-
-
-
-
-

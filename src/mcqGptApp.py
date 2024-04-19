@@ -1,16 +1,17 @@
 #!/usr/bin/python
 #-----------------------------------------------------------------------------
-# Name:        app.py [python3]
+# Name:        mcqGPTApp.py [python3]
 #
-# Purpose:     This module is the main website host program to host the scheduled
-#              tasks monitor Hub webpage by using python-Flask frame work. 
+# Purpose:     The web interface of the Multi-Choice-Question-GPT-Bot for user 
+#              to batch processing the multi-choice cyber security exam questions 
+#              via Open-AI to get the answers.
 #  
 # Author:      Yuancheng Liu
 #
 # Created:     2023/08/23
 # version:     v0.1.2
-# Copyright:   National Cybersecurity R&D Laboratories
-# License:     
+# Copyright:   Copyright (c) 2023 LiuYuancheng
+# License:     MIT License
 #-----------------------------------------------------------------------------
 # CSS lib [bootstrap]: https://www.w3schools.com/bootstrap4/default.asp
 # https://www.w3schools.com/howto/howto_css_form_on_image.asp
@@ -25,33 +26,30 @@ from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit # pip install Flask-SocketIO==5.3.5
 
 import mcqGptAppGlobal as gv
-import mcqGptAppDataMgr as dataManager
 
+TestMd= True
 async_mode = None
 
 #-----------------------------------------------------------------------------
 # Init the flask web app program.
 def createApp():
-    """ Create the flask App."""
+    """ Create the flask App with the data manager."""
     app = Flask(__name__)
     app.config['SECRET_KEY'] = gv.APP_SEC_KEY
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=gv.COOKIE_TIME)
     app.config['UPLOAD_FOLDER'] = gv.UPLOAD_FOLDER
-    # init the data manager
-    gv.iDataMgr = dataManager.DataManager(app)
-    if not gv.iDataMgr: exit()
-    gv.iDataMgr.start()
+    # init the data manager is not under web test mode.
+    print("Program test mode: %s" %str(TestMd))
+    if not TestMd:
+        import mcqGptAppDataMgr as dataManager
+        gv.iDataMgr = dataManager.DataManager(app)
+        if not gv.iDataMgr: exit()
+        gv.iDataMgr.start()
     return app
 
 def checkFile(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in gv.ALLOWED_EXTENSIONS
-
-def initGlobal():
-    gv.gSrceName = None
-    gv.gSrcPath = None
-    gv.gSrcType = None
-    gv.gRstPath = None
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -63,10 +61,10 @@ threadLock = threading.Lock()
 
 #-----------------------------------------------------------------------------
 # web request handling functions. 
-
 @app.route('/')
 def index():
-    posts = {'mode': gv.gParserMode}
+    posts = {'mode': gv.gParserMode, 'page': 1} # page index is used to highlight the left page slide bar.
+    return render_template('index.html', posts=posts)
     return render_template('index.html', 
                            async_mode=socketio.async_mode, 
                            posts=posts)

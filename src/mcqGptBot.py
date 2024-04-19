@@ -2,7 +2,7 @@
 #-----------------------------------------------------------------------------
 # Name:        Multi-Choice-Question-GPT-Bot
 #
-# Purpose:     This module is used to help people to batch processing the multi-choice 
+# Purpose:     This module is used to help user to batch processing the multi-choice 
 #              cyber security exam questions via Open-AI to get the answer so the 
 #              researcher can use it to check the AI's correctness rate.
 # 

@@ -21,7 +21,7 @@ For good coding practice, follow the following naming convention:
 import os, sys
 
 print("Current working directory is : %s" % os.getcwd())
-DIR_PATH = dirpath = os.path.dirname(__file__) if os.path.dirname(__file__) else os.getcwd()
+DIR_PATH = dirpath = os.path.dirname(os.path.abspath(__file__))
 print("Current source code location : %s" % dirpath)
 APP_NAME = ('OpenAI', 'mcq_bot_app')
 
@@ -96,16 +96,11 @@ Return choice indicator character in a in a comma separated list.
 Q_BANK_DIR = os.path.join(dirpath, CONFIG_DICT['QS_BANK_DIR'])
 FILTER_CHAR = ('#', ' ', '\n', '\r', '\t')
 
-# Init the web app glocal vars
-
-RC_TIME_OUT = 10    # reconnection time out.
+# Init the web app glocal constants.
 APP_SEC_KEY = 'secrete-key-goes-here'
-UPDATE_PERIODIC = 15
 COOKIE_TIME = 30
-
 UPLOAD_FOLDER = os.path.join(dirpath, 'uploadFolder')
 DOWNLOAD_FOLDER = os.path.join(dirpath, 'downloadFolder')
-
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'html', 'md', 'pdf', 'json'}
 
 #-------<GLOBAL VARIABLES (start with "g")>------------------------------------
@@ -136,6 +131,12 @@ gSrceName = None
 gSrcPath = None
 gSrcType = None
 gRstPath = None 
+
+# Init Flask App parameters : 
+gflaskHost = '0.0.0.0'
+gflaskPort = int(CONFIG_DICT['FLASK_SER_PORT']) if 'FLASK_SER_PORT' in CONFIG_DICT.keys() else 5000
+gflaskDebug = CONFIG_DICT['FLASK_DEBUG_MD']
+gflaskMultiTH =  CONFIG_DICT['FLASK_MULTI_TH']
 
 #-------<GLOBAL PARAMTERS>-----------------------------------------------------
 iSocketIO = None

@@ -93,7 +93,7 @@ def index():
 
 @app.route('/introduction')
 def introduction():
-    return render_template('Introduction.html', posts={'page': 0})
+    return render_template('intro.html', posts={'page': 0})
 
 @app.route('/mdselect', methods = ['POST', 'GET'])  
 def mdselect():

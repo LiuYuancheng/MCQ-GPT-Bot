@@ -47,6 +47,16 @@ def createApp():
     return app
 
 #-----------------------------------------------------------------------------
+def createTemMcqFile(contents):
+    filename = 'tempQuestionFile.txt'
+    gv.gAppParmDict['srcName'] = filename
+    gv.gAppParmDict['srcPath'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    gv.gAppParmDict['srcType'] = 'txt'
+    gv.gAppParmDict['rstPath'] = None
+    with open(gv.gAppParmDict['srcPath'] , "w") as outfile:
+        outfile.write(contents)
+    return True
+
 def checkFile(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in gv.ALLOWED_EXTENSIONS
@@ -127,12 +137,21 @@ def urlupload():
         gv.gAppParmDict['rstPath'] = None
     return render_template('index.html', posts=posts)
 
+@app.route('/textupload', methods=['POST', 'GET'])
+def textupload():
+    posts = {'page': 1, 'mode': gv.gAppParmDict['funcMode']}
+    if request.method == 'POST':
+        data = request.form['text']
+        print(data)
+        rst = createTemMcqFile(data)
+    return render_template('index.html', posts=posts)
+
 #-----------------------------------------------------------------------------
 # socketIO communication handling functions. 
 @socketio.event
 def connect():
-    gv.gWeblogCount = 0
-    emit('serv_response', {'data': 'MCQ-Solver Ready', 'count': gv.gWeblogCount})
+    gv.gAppParmDict['webMsgCount'] = 0
+    emit('serv_response', {'data': 'MCQ-Solver Ready', 'count': gv.gAppParmDict['webMsgCount']})
 
 @socketio.event
 def cli_request(message):
@@ -151,7 +170,6 @@ def startProcess(data):
     print('received message: ' + str(data))
     gv.iDataMgr.startProcess()
     emit('startprocess', {'data': 'Starting to process MCQ-source: %s' %str(gv.gSrceName)})
-
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':

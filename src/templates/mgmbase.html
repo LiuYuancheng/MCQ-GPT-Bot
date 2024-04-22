@@ -13,16 +13,16 @@
             {% endif %}
             
             {% if posts['page'] == 1 %}
-                <a href="{{ url_for('index')}}" class="list-group-item list-group-item-action bg-secondary">MITRE-ATT&CK mapper</a>
+                <a href="{{ url_for('index')}}" class="list-group-item list-group-item-action bg-secondary">Security MCQ Solver</a>
             {% else %}
-                <a href="{{ url_for('index')}}" class="list-group-item list-group-item-action">MITRE-ATT&CK mapper</a>
+                <a href="{{ url_for('index')}}" class="list-group-item list-group-item-action">Security MCQ Solver</a>
             {% endif %}
 
 
             {% if posts['page'] == 2 %}
-                <a href="#" class="list-group-item list-group-item-action bg-secondary">MITRE-CWE matcher</a>
+                <a href="#" class="list-group-item list-group-item-action bg-secondary">Usage Manual</a>
             {% else %}
-                <a href="#" class="list-group-item list-group-item-action">MITRE-CWE matcher</a>
+                <a href="#" class="list-group-item list-group-item-action">Usage Manual</a>
             {% endif %}
             
             {% if posts['page'] == 3 %}

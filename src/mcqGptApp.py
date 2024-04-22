@@ -27,7 +27,6 @@ from flask_socketio import SocketIO, emit # pip install Flask-SocketIO==5.3.5
 
 import mcqGptAppGlobal as gv
 
-TestMd= True
 async_mode = None
 
 #-----------------------------------------------------------------------------
@@ -39,20 +38,43 @@ def createApp():
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=gv.COOKIE_TIME)
     app.config['UPLOAD_FOLDER'] = gv.UPLOAD_FOLDER
     # init the data manager is not under web test mode.
-    print("Program test mode: %s" %str(TestMd))
-    if not TestMd:
+    print("Program test mode: %s" %str(gv.gTestMD))
+    if not gv.gTestMD:
         import mcqGptAppDataMgr as dataManager
         gv.iDataMgr = dataManager.DataManager(app)
         if not gv.iDataMgr: exit()
         gv.iDataMgr.start()
     return app
 
+#-----------------------------------------------------------------------------
 def checkFile(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in gv.ALLOWED_EXTENSIONS
 
+def uploadfile(file):
+    """ upload a file from the post request"""
+    print(file.filename)
+    if file.filename == '':
+        flash('No selected file')
+    elif file and checkFile(file.filename):
+        filename = secure_filename(file.filename)
+        gv.gAppParmDict['srcName'] = filename
+        gv.gAppParmDict['srcPath'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        gv.gAppParmDict['srcType'] = filename.rsplit('.', 1)[1].lower()
+        gv.gAppParmDict['rstPath'] = None
+        file.save(gv.gAppParmDict['srcPath'])
+        return True
+    return False 
+
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
+gv.gAppParmDict['funcMode'] = None
+gv.gAppParmDict['webMsgCount'] = 0
+gv.gAppParmDict['srcName'] = None
+gv.gAppParmDict['srcPath'] = None
+gv.gAppParmDict['srcType'] = None
+gv.gAppParmDict['rstPath'] = None
+
 app = createApp()
 socketio = SocketIO(app, async_mode=async_mode)
 gv.iSocketIO = socketio
@@ -63,57 +85,47 @@ threadLock = threading.Lock()
 # web request handling functions. 
 @app.route('/')
 def index():
-    posts = {'mode': gv.gParserMode, 'page': 1} # page index is used to highlight the left page slide bar.
-    return render_template('index.html', posts=posts)
-    return render_template('index.html', 
-                           async_mode=socketio.async_mode, 
+    # page index is used to highlight the left page slide bar.
+    posts = {'page': 1}
+    return render_template('index.html',
+                           async_mode=socketio.async_mode,
                            posts=posts)
+
+@app.route('/introduction')
+def introduction():
+    return render_template('Introduction.html', posts={'page': 0})
 
 @app.route('/mdselect', methods = ['POST', 'GET'])  
 def mdselect():
-    posts = None
+    posts = {'page': 1, 'mode': gv.gAppParmDict['funcMode']}
     if request.method == 'POST':
         option = request.form['options']
         if gv.iDataMgr:
-            gv.gParserMode = 1 if option =='mode1'else 2
-            gv.iDataMgr.reInitQuestionParser(mode=gv.gParserMode)
-            posts = {'mode': gv.gParserMode}
+            gv.gAppParmDict['funcMode'] = 1 if option == 'mode1'else 2
+            gv.iDataMgr.reInitQuestionParser(mode=gv.gAppParmDict['funcMode'])
+            posts['mode'] = gv.gAppParmDict['funcMode']
     return render_template('index.html', posts=posts)
-    
+
 @app.route('/fileupload', methods = ['POST', 'GET'])  
 def fileupload():
-    posts = None
+    posts = {'page': 1, 'mode': gv.gAppParmDict['funcMode']}
     if request.method == 'POST':
         file = request.files['file']
-        print(file.filename)
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        elif file and checkFile(file.filename):
-            filename = secure_filename(file.filename)
-            gv.gSrceName = filename
-            gv.gSrcPath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            gv.gSrcType = filename.rsplit('.', 1)[1].lower()
-            gv.gRstPath = None
-            file.save(gv.gSrcPath)
-            posts = {'filename': gv.gSrceName}
+        rst = uploadfile(file)
+        if not rst: return redirect(request.url)  
+        posts['filename'] = gv.gAppParmDict['srcName']
     return render_template('index.html', posts=posts)
 
 @app.route('/urlupload', methods=['POST', 'GET'])
 def urlupload():
-    posts = None
+    posts = {'page': 1, 'mode': gv.gAppParmDict['funcMode']}
     if request.method == 'POST':
         urlStr = request.form['mcqurl']
-        gv.gSrceName = 'mcq_from_url'
-        gv.gSrcPath = urlStr
-        gv.gSrcType = 'url'
-        gv.gRstPath = None
-        posts = {'filename': gv.gSrceName}
+        posts['filename'] = gv.gAppParmDict['srcName'] = 'mcq_from_url'
+        gv.gAppParmDict['srcPath'] = urlStr
+        gv.gAppParmDict['srcType'] = 'url'
+        gv.gAppParmDict['rstPath'] = None
     return render_template('index.html', posts=posts)
-
-@app.route('/introduction')
-def introduction():
-    return render_template('introduction.html', posts=None)
 
 #-----------------------------------------------------------------------------
 # socketIO communication handling functions. 
@@ -140,6 +152,11 @@ def startProcess(data):
     gv.iDataMgr.startProcess()
     emit('startprocess', {'data': 'Starting to process MCQ-source: %s' %str(gv.gSrceName)})
 
+
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000,  debug=False, threaded=True)
+    #app.run(host="0.0.0.0", port=5000,  debug=False, threaded=True)
+    app.run(host=gv.gflaskHost,
+            port=gv.gflaskPort,
+            debug=gv.gflaskDebug,
+            threaded=gv.gflaskMultiTH)

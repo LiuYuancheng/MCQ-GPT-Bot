@@ -125,6 +125,9 @@ else:
     gDebugPrint("Use default question AI prompt")
     gMcqScearioPrompt = SCE_TEMPLATE
 
+gTestMD = CONFIG_DICT['TEST_MD'] if 'TEST_MD' in CONFIG_DICT.keys() else False
+gAppParmDict = {}
+
 gParserMode = 1
 gWeblogCount = 0 
 gSrceName = None

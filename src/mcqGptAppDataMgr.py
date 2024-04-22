@@ -39,12 +39,16 @@ class DataManager(threading.Thread):
 
     def reInitQuestionParser(self, mode=1):
         if mode == self.mcqParserMode: return
-        self.mcqParser = None
+        self.mcqParserMode = mode
         mcqTemplate = gv.MCQ_TEMPLATE if mode == 1 else gv.gMcqQuestionPrompt
         self.mcqParser = botUtils.QuestionParser(openAIkey=gv.API_KEY, 
                                             mcqTemplate=mcqTemplate)
-        self.mcqParserMode = mode
-        gv.gDebugPrint('MCQ question parser mode set to : [%s]' %str(mode) )
+        gv.gDebugPrint('MCQ question parser mode set to : [%s]' %str(mode), logType=gv.LOG_INFO)
+
+
+
+
+
 
     def updateWebLog(self, logMsg):
         if gv.iSocketIO:

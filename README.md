@@ -1,8 +1,21 @@
-# MCQ-GPT-Bot
+# MCQ-GPT-ROBOT
 
-**Program design**:  We want to create an assistant AI-Bot program which can batch process the multi choice cyber security exam questions (From different source format : `md` `url`, `html`, `txt`, `pdf`) via OpenAI to get the answers so the researcher can use it to check the AI's answer correctness rate, AI's performance on solving question on different fields and do further data analysis. 
+### Large Language Module Cyber Security Multi-Choice-Questions Solver
 
  ![](doc/img/logo.png)
+
+**Program Design Purpose**: Our objective is to develop an LLM-AI assistant program capable of efficiently processing batches of multi-choice cyber security questions sourced from various formats such as Markdown (md) , URL, HTML, Text (`txt`), Json and PDF. Leveraging Open-AI (ChatGPT), the program will provide answers to these questions, enabling researchers to assess the AI's accuracy in answering queries (such as the prompt engineering), its performance across diverse fields, and conduct comprehensive data analysis.
+
+
+
+```
+# Created:     2023/08/23
+# version:     v0.1.4
+# Copyright:   Copyright (c) 2023 LiuYuancheng
+# License:     MIT License
+```
+
+**Table of Contents**
 
 [TOC]
 
@@ -184,69 +197,7 @@ pip install langchain
 
 ### Program Usage
 
-Please follow below steps to process the MCQ source files:
-
-##### Step1: Copy the MCQ source files
-
-Copy the MCQ files ( `*.html`, `*.txt`, `*.md`, `*.pdf` )  you want to process and `questionContents.json` to the a folder in the `src` folder (such as the `questionbank` ).  Add/Append the files you want to process in the `questionContents.json` as below : 
-
-```
-"name": "test_question_bank03",
-"type": "url",
-"src": "https://www.yeahhub.com/certified-ethical-hacker-v10-multiple-choice-questions-answers-part-9/"
-```
-
-- **name** : The question bank file name you want to archive.
-- **type**: Mcq source type ( current support type: html, url, md, pdf, txt).
-- **src**: The source file name or URL.
-
-
-
-##### Step2: Set the Bot execution configuration file
-
-Rename the configuration file template `config_template.txt` to `config.txt` and add you OpenAI-API key as below:
-
-```
-# This is the config file template for the module <mcqGptBot.py>
-# Setup the parameter with below format (every line follow <key>:<val> format, the
-# key cannot be changed):
-
-# set openAI API key
-API_KEY: <Yout own OpenAI API key>
-
-# select the AI model apply to the mcq.
-AI_MODEL:gpt-3.5-turbo-16k
-
-# folder name of the question source files, the source folder need to be in the 
-# same folder of mcqGptBot.py.
-QS_BANK_DIR:questionbank
-
-# The json file which contents the source files information need to process in the 
-# question source folder.
-QS_CONT_JSON:questionContents.json
-
-# Define the MCQ question AI prompt constant name in <mcqGptPromptRepo.py> will be used, 
-# if not defined, will use the default one 'MCQ_TEMPLATE' in the <mcqGPTBotGlobal.py>
-MCQ_PROMPT:MCQ_QA_PROMPT
-
-# Define the MCQ solving scenario AI prompt constant name in <mcqGptPromptRepo.py> will 
-# be used, if not defined, will use the default one 'SCE_TEMPLATE' in the <mcqGPTBotGlobal.py>
-SCE_PROMPT:CCNP_SOL_PROMPT
-```
-
-
-
-##### Step3: Run the Bot to batch process all the MCQ sources
-
-Run program:
-
-```
-python mcqGptBot.py
-```
-
-The processed question will be saved in the text question bank file which same name as the name you set in the `questionContents.json` file. You can refer to the questionbank folder to check the detail. Example: 
-
-`network-secuirty-quiz-questions-answers.pdf` => `test_question_bank03.txt`
+Please refer to the usage manual document: [link](UsageManual.md)
 
 
 

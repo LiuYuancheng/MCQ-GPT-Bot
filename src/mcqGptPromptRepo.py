@@ -2,7 +2,7 @@
 # Name:        mcqGptPromptRepo.py
 #
 # Purpose:     This module is used save different MCQ question and the exam 
-#              scenario AI-prompt 
+#              scenario AI-prompt to guide AI to get higher correctness rate.
 #              
 # Author:      Yuancheng Liu
 #
@@ -13,9 +13,7 @@
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
 # defile all the question parsing AI prompts here:
-
 # Question parse prompt without parse the answer.
 MCQ_Q_PROMPT = """Find all the multiple choice questions from the text:
 "{text}", reformat them and list all the questions under below format:
@@ -38,7 +36,6 @@ D.choice
 Answer:
 """
 
-#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 # define all the question/exam scenario AI prompts here:
 

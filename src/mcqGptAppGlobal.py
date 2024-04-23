@@ -7,7 +7,7 @@
 # Author:      Yuancheng Liu
 #
 # Created:     2010/08/26
-# Version:     v_0.1.2
+# Version:     v_0.1.4
 # Copyright:   Copyright (c) 2023 LiuYuancheng
 # License:     MIT License
 #-----------------------------------------------------------------------------
@@ -126,14 +126,8 @@ else:
     gMcqScearioPrompt = SCE_TEMPLATE
 
 gTestMD = CONFIG_DICT['TEST_MD'] if 'TEST_MD' in CONFIG_DICT.keys() else False
+# Init the App used parameter dict
 gAppParmDict = {}
-
-gParserMode = 1
-gWeblogCount = 0 
-gSrceName = None
-gSrcPath = None
-gSrcType = None
-gRstPath = None 
 
 # Init Flask App parameters : 
 gflaskHost = '0.0.0.0'

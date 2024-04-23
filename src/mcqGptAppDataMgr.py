@@ -1,18 +1,18 @@
 #-----------------------------------------------------------------------------
-# Name:        dataManager.py
+# Name:        mcqGptAppDataMgr.py
 #
-# Purpose:     A manager class running in the sub-thead to handle all the data
-#              shown in the ***state page.
-#              
+# Purpose:     A MCQ data manager class to hold the MCQ solve bot and manage the 
+#              result of the mcq question. 
+#                 
 # Author:      Yuancheng Liu, 
 #
-# Version:     v_0.2
-# Created:     2022/09/04
-# Copyright:   
-# License:     
+# Version:     v_0.1.4
+# Created:     2023/09/04
+# Copyright:   Copyright (c) 2023 LiuYuancheng
+# License:     MIT License 
 #-----------------------------------------------------------------------------
+
 import os
-import json
 import time
 import threading
 import mcqGptAppGlobal as gv
@@ -21,7 +21,12 @@ import mcqGptBotUtils as botUtils
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class DataManager(threading.Thread):
-
+    """ A data manager class (with a MCQ parser and a MCQ solver) running in the 
+        sub-thread to accept the MCQ question from the Web UI, use the mcq parser 
+        to parse the question, and use the mcq solver to generate the AI answer.
+        The result of the mcq question will be saved to the result download folder 
+        for user to download from the webUI.
+    """
     def __init__(self, parent) -> None:
         threading.Thread.__init__(self)
         self.parent = parent
@@ -37,72 +42,12 @@ class DataManager(threading.Thread):
         self.terminate = False
         self.startProFlg = False
 
-    def reInitQuestionParser(self, mode=1):
-        if mode == self.mcqParserMode: return
-        self.mcqParserMode = mode
-        mcqTemplate = gv.MCQ_TEMPLATE if mode == 1 else gv.gMcqQuestionPrompt
-        self.mcqParser = botUtils.QuestionParser(openAIkey=gv.API_KEY, 
-                                            mcqTemplate=mcqTemplate)
-        gv.gDebugPrint('MCQ question parser mode set to : [%s]' %str(mode), logType=gv.LOG_INFO)
-
-
-
-
-
-
-    def updateWebLog(self, logMsg):
-        if gv.iSocketIO:
-            gv.gWeblogCount +=1
-            gv.iSocketIO.emit('serv_response',{'data': str(logMsg), 'count': gv.gWeblogCount})
-
-#-----------------------------------------------------------------------------
-    def run(self):
-        """ Thread run() function call by start(). """
-        #Log.info("gv.iDataMgr: run() function loop start, terminate flag [%s]", str(
-        #    self.terminate), printFlag=LOG_FLAG)
-        time.sleep(1)  # sleep 1 second to wait socketIO start to run.
-        while not self.terminate:
-            if self.startProFlg:
-                self.processMcqFile()
-                self.startProFlg = False
-            time.sleep(0.5)
-
-#-----------------------------------------------------------------------------
-    def startProcess(self):
-        self.startProFlg = True
-
-    def appendCompareResult(self, bankFilePath, correctCount, totalCount):
-        with open(bankFilePath, 'a', encoding="utf8") as fh:
-            fh.write('\n')
-            fh.write('AI Answer compare (correct / total) : %s / %s ' % (str(correctCount), str(totalCount)))
-            if totalCount == 0: totalCount = 1
-            fh.write('Correctness rate : %s' % str(float(correctCount)/totalCount))
-
-#-----------------------------------------------------------------------------
-    def compareAIAnswers(self, bankName, questionList):
-        """ Get the AI's answer of the questions and compare with the correct answer
-            to calcuate the answer correctness rate.
-            Returns:
-                (int, int): (correct_Answer_Count, total_Question_count)
-        """
-        answerList = []
-        correctCount = 0
-        questionNum = len(questionList)
-        for idx, question in enumerate(questionList):
-            gv.gDebugPrint("- start to process question %s / %s " % (str(idx+1), str(questionNum)))
-            self.updateWebLog("- start to process question %s / %s " % (str(idx+1), str(questionNum)))
-            ans, aians, crt = self.mcqSolver.compareAnswer(question)
-            answerList.append(aians)
-            if crt: correctCount +=1
-        self.dataMgr.addAiAnswers(bankName, answerList)
-        return (correctCount, len(questionList))
-
-#-----------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------
     def _createQBfile(self, bankFilePath, mcqDict, aiAnsFlg=False):
         """ Create the question bank file.
         Args:
             bankFilePath (str): question bank file path.
-            mcqDict (dict): mcq data dictionary. examle:
+            mcqDict (dict): mcq data dictionary. example:
                 {
                     'src': src if src else mcqSetName,
                     'mcqList': questionList,
@@ -112,7 +57,7 @@ class DataManager(threading.Thread):
             aiAnsFlg (bool, optional): whether append AI answer behind the 
                 question. Defaults to False.
         """
-        gv.gDebugPrint("Create question bank file: %s" %bankFilePath)
+        gv.gDebugPrint("Create question bank file: %s" %bankFilePath, logType=gv.LOG_INFO)
         with open(bankFilePath, 'w', encoding="utf8") as fh:
             srcLine = '# Src:'+ mcqDict['src'] +'\n'
             fh.write(srcLine)
@@ -126,18 +71,94 @@ class DataManager(threading.Thread):
                     fh.write(aiAnsStr)
                 fh.write('\n')
 
-#-----------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------
+    def appendCompareResult(self, bankFilePath, correctCount, totalCount):
+        """ Append the correnctness calculation reuslt in the result file.
+            Args:
+                bankFilePath (str): result file path
+                correctCount (int): correct answer count
+                totalCount (int): total question count
+        """
+        with open(bankFilePath, 'a', encoding="utf8") as fh:
+            fh.write('\n')
+            fh.write('AI Answer compare (correct / total) : %s / %s ' %
+                     (str(correctCount), str(totalCount)))
+            if totalCount == 0: totalCount = 1
+            fh.write('Correctness rate : %s' %str(float(correctCount)/totalCount))
+
+    #-----------------------------------------------------------------------------
+    def compareAIAnswers(self, bankName, questionList):
+        """ Get the AI's answer of the questions and compare with the correct answer
+            to calcuate the answer correctness rate.
+            Returns:
+                (int, int): (correct_Answer_Count, total_Question_count)
+        """
+        answerList = []
+        correctCount = 0
+        questionNum = len(questionList)
+        for idx, question in enumerate(questionList):
+            self.updateWebLog("- start to process question %s / %s " % (str(idx+1), str(questionNum)))
+            ans, aians, crt = self.mcqSolver.compareAnswer(question)
+            answerList.append(aians)
+            if crt: correctCount +=1
+        self.dataMgr.addAiAnswers(bankName, answerList)
+        return (correctCount, len(questionList))
+
+    #-----------------------------------------------------------------------------
+    def reInitQuestionParser(self, mode=1):
+        """ ReInit the question parser based on the user setting
+            Args:
+                mode (int, optional): 
+                - 1: User AI to get the answer. 
+                - 2: Compare the AI answer with the correct input to calcuate the 
+                correctness rate.  
+                Defaults to 1.
+        """
+        if mode == self.mcqParserMode: return
+        self.mcqParserMode = mode
+        mcqTemplate = gv.MCQ_TEMPLATE if self.mcqParserMode == 1 else gv.gMcqQuestionPrompt
+        self.mcqParser = botUtils.QuestionParser(openAIkey=gv.API_KEY,
+                                                 mcqTemplate=mcqTemplate)
+        gv.gDebugPrint('MCQ question parser mode set to : [%s]' % str(self.mcqParserMode),
+                       logType=gv.LOG_INFO)
+
+
+    #-----------------------------------------------------------------------------
+    def updateWebLog(self, logMsg):
+        """Update the contents in the web log text field."""
+        gv.gDebugPrint(logMsg, logType=gv.LOG_INFO)
+        if gv.iSocketIO:
+            gv.gWeblogCount += 1
+            gv.iSocketIO.emit('serv_response', {'data': str(logMsg)+'\n', 'count': gv.gWeblogCount})
+
+    #-----------------------------------------------------------------------------
+    def startProcess(self):
+        """ Set the tart process flag."""
+        if self.startProFlg: return False # There is one process on going .
+        self.startProFlg = True
+        return True
+
+    #-----------------------------------------------------------------------------
+    def run(self):
+        """ Thread run() function call by start(). """
+        gv.gDebugPrint( "gv.iDataMgr: run() function loop start, terminate flag [%s]" %str(self.terminate), 
+                       logType=gv.LOG_INFO)
+        time.sleep(1)  # sleep 1 second to wait socketIO start to run.
+        while not self.terminate:
+            if self.startProFlg:
+                self.processMcqFile()
+                self.startProFlg = False
+            time.sleep(0.5)
+    
+    #-----------------------------------------------------------------------------
     def processMcqFile(self):
-        if gv.gSrceName and gv.gSrcType:
-            bankName = str(gv.gSrceName).rsplit('.', 1)[0] + '_result'
-            bankType = gv.gSrcType
-            bankSrc = gv.gSrcPath
-            gv.gDebugPrint("Start to process %s" %str(bankName), 
-                          logType=gv.LOG_INFO)
-            self.updateWebLog("Start to parse questions from: %s" %str(bankName))
+        if gv.gAppParmDict['srcName'] and gv.gAppParmDict['srcType']:
+            bankName = str(gv.gAppParmDict['srcName']).rsplit('.', 1)[0] + '_result'
+            bankType = gv.gAppParmDict['srcType']
+            bankSrc = gv.gAppParmDict['srcPath']
+            self.updateWebLog("Start to generate reuslt to : %s" %str(bankName))
             questionlist = self.mcqParser.getQuestions(bankSrc, srcType=bankType)
             self.dataMgr.addQuestions(bankName, bankSrc, questionlist)
-            gv.gDebugPrint("- finished parsing the questions from source.")
             self.updateWebLog("- finished parsing the questions from source.")
             mcqDict = self.dataMgr.getMcqData(mcqSetName=bankName)
             crt = total = 0
@@ -145,7 +166,9 @@ class DataManager(threading.Thread):
             bankFilePath = os.path.join(gv.DOWNLOAD_FOLDER, bankName+'.txt')
             self._createQBfile(bankFilePath, mcqDict, aiAnsFlg=True)
             self.appendCompareResult(bankFilePath, crt, total)
-            gv.gRstPath = bankFilePath
             gv.gDebugPrint("Finished process all the questions.")
             self.updateWebLog("Finished process all the questions.")
             self.updateWebLog("Downloading result...")
+        else:
+            gv.gDebugPrint("The input source or type in not valid: %s" %str((gv.gAppParmDict['srcName'], 
+                                                                    gv.gAppParmDict['srcType'])), logType=gv.LOG_WARN)

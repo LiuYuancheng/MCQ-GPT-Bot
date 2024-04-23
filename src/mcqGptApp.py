@@ -9,11 +9,11 @@
 # Author:      Yuancheng Liu
 #
 # Created:     2023/08/23
-# version:     v0.1.2
+# version:     v0.1.4
 # Copyright:   Copyright (c) 2023 LiuYuancheng
 # License:     MIT License
 #-----------------------------------------------------------------------------
-# CSS lib [bootstrap]: https://www.w3schools.com/bootstrap4/default.asp
+# CSS lib [bootstrap]: https://w3schools.com/bootstrap5/
 # https://www.w3schools.com/howto/howto_css_form_on_image.asp
 # https://medium.com/the-research-nest/how-to-log-data-in-real-time-on-a-web-page-using-flask-socketio-in-python-fb55f9dad100
 
@@ -151,16 +151,16 @@ def textupload():
 @socketio.event
 def connect():
     gv.gAppParmDict['webMsgCount'] = 0
-    emit('serv_response', {'data': 'MCQ-Solver Ready', 'count': gv.gAppParmDict['webMsgCount']})
+    emit('serv_response', {'data': 'MCQ-Solver Ready \n', 'count': gv.gAppParmDict['webMsgCount']})
 
 @socketio.event
 def cli_request(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
-    if message['data'] == 'download' and gv.gRstPath:
-        if os.path.exists(gv.gRstPath):
-            gv.gDebugPrint("Download the file.")
-            with open(gv.gRstPath) as fh:
-                socketio.emit('file_ready', {'filename': gv.gSrceName, 'content': fh.read()})
+    if message['data'] == 'download' and gv.gAppParmDict['rstPath']:
+        if os.path.exists(gv.gAppParmDict['rstPath']):
+            gv.gDebugPrint("Download the file.", logType=gv.LOG_INFO)
+            with open(gv.gAppParmDict['rstPath']) as fh:
+                socketio.emit('file_ready', {'filename': gv.gAppParmDict['srcName'], 'content': fh.read()})
     else:
         emit('serv_response',
              {'data': message['data'], 'count': session['receive_count']})
@@ -169,7 +169,7 @@ def cli_request(message):
 def startProcess(data):
     print('received message: ' + str(data))
     gv.iDataMgr.startProcess()
-    emit('startprocess', {'data': 'Starting to process MCQ-source: %s' %str(gv.gSrceName)})
+    emit('startprocess', {'data': 'Starting to process MCQ-source: %s \n' %str(gv.gAppParmDict['srcName'])})
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':

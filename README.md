@@ -4,9 +4,9 @@
 
  ![](doc/img/logo.png)
 
-**Program Design Purpose**: Our objective is to develop an LLM-AI assistant program capable of efficiently processing batches of multi-choice cyber security questions sourced from various formats such as Markdown (md) , URL, HTML, Text (`txt`), Json and PDF. Leveraging Open-AI (ChatGPT), the program will provide answers to these questions, enabling researchers to assess the AI's accuracy in answering queries (such as the prompt engineering), its performance across diverse fields, and conduct comprehensive data analysis.
+**Program Design Purpose**: Our objective is to develop a simple LLM-AI assistant program capable of efficiently processing batches of multi-choice cyber security questions sourced from various formats such as Markdown (md) , URL, HTML, Text (`txt`), Json and PDF. Leveraging Open-AI (ChatGPT), the program will provide answers to these questions, enabling researchers to assess the AI's accuracy in answering queries (such as the prompt engineering), its performance across diverse fields, and conduct comprehensive data analysis. The program workflow overview is shown below:
 
-
+![](doc/img/overview.png)
 
 ```
 # Created:     2023/08/23
@@ -44,15 +44,23 @@
 
 ### Introduction
 
-The MCQ-GPT-Bot will is an automate AI-Bot assistant program which provides below functions: 
+The MCQ-GPT-ROBOT is an automated AI assistant program to help the cyber security researchers to process batches of multi-choice cyber security questions by using LLM AI module. The program will try to convert different format of the questions source to standard question back format text file then get the answers. With different question prompt scenario setting, it can also applied to solve MCQ questions under other field. The program is designed to streamline three key functions:
 
-- Parse multi-choice-questions from different format data source to build the standard question bank files for the further process such as training (data normalization) .
-- If the question sources don't content the answer, use OpenAI to get the answer (with or without the scenario prompt) . 
-- If the question sources also provide the answer, compare with AI's answer and calculate the AI's correctness rate.
+- It parses multi-choice questions from various data sources, enabling the creation of standardized question bank files for further processing, such as training through data normalization.
+- In cases where the question sources lack answers, the program leverages Open-AI to obtain the answers, either with or without scenario prompts.
+- Additionally, if the question sources do provide answers, the program compares them with the AI-generated answers and calculates the AI's correctness rate.
 
-The program will use the LLM [LangChain](https://python.langchain.com/docs/get_started/introduction.html) frame work to implement the communication with the OpenAI-API.  We will also provide a web UI (under development) for the researcher to test their prompt or normal user who want to do quick test:
+To facilitate seamless communication with the Open-AI API, the program utilizes the [LangChain](https://python.langchain.com/docs/get_started/introduction.html) framework. Furthermore, we provide both console interface and the web interface allow researchers to test their prompts and integrate the bot/function in their program.
+
+
 
 ![](doc/img/webUI.png)
+
+
+
+NCL allows the user to build their own container based environment and NCL will provide the OS images for the container. User can config whether enable or disable the OS  automatic updates, when enabled, allows user instances to stay up-to-date with respect to security fixes and bug fixes.
+
+
 
 
 

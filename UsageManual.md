@@ -8,7 +8,7 @@ This document will introduce how to use the Cyber Security AI robot by console i
 
 ------
 
-### User MCQ-GPT-ROBOT Console Interface
+### Use MCQ-GPT-ROBOT Console Interface
 
 Follow the below steps to use the MCQ-GPT-ROBOT via command interface. The user can use the config file to automated processing batches of multi-choice cyber security question files or use the manual mode to input the parameters.
 
@@ -137,4 +137,41 @@ AiAns:B
 ...
 AI Answer compare (correct / total) : 4 / 6 Correctness rate : 0.67
 ```
+
+
+
+------
+
+### Use MCQ-GPT-ROBOT Web Interface
+
+Follow the below steps to use the MCQ-GPT-ROBOT via web interface. 
+
+##### Step 1: Set the MCQ-GPT-ROBOT execution configuration file
+
+Set the configure file OpenAI key and module (same setting as the previous sectiohn`Use MCQ-GPT-ROBOT Console Interface setp2` ), change the flask app parameters as shown below (Set the test mode flag `TEST_MD` to false, if set to true the web will not link to your OpenAI  API)
+
+```
+#-----------------------------------------------------------------------------
+# Init the Flask app parameters
+TEST_MD:False
+FLASK_SER_PORT:5000
+FLASK_DEBUG_MD:False
+FLASK_MULTI_TH:True
+```
+
+
+
+##### Step 2: Run the MCQ-GPT-ROBOT web host program
+
+Run program:
+
+```
+python mcqGptApp.py
+```
+
+Based on the config file port, open browser and type in web interface URL : http://127.0.0.1:5000 , select the **Security MCQ Solver** from the left guide navigation bar. (As shown below)
+
+![](doc/img/usageManual03.png)
+
+> Remark: if the log shows MCQ-Solver ready which means the program is connect to Open-AI server correctly. 
 

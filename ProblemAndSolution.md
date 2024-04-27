@@ -4,6 +4,9 @@
 
 [TOC]
 
+- [**Problem and Solution**](#--problem-and-solution--)
+        * [Problem [0]: Execution Exception: OpenAI API timeout](#problem--0---execution-exception--openai-api-timeout)
+
 **Format:** 
 
 **Problem**: ( Situation description )

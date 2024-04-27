@@ -166,6 +166,7 @@ class DataManager(threading.Thread):
             bankFilePath = os.path.join(gv.DOWNLOAD_FOLDER, bankName+'.txt')
             self._createQBfile(bankFilePath, mcqDict, aiAnsFlg=True)
             self.appendCompareResult(bankFilePath, crt, total)
+            gv.gAppParmDict['rstPath'] = bankFilePath
             gv.gDebugPrint("Finished process all the questions.")
             self.updateWebLog("Finished process all the questions.")
             self.updateWebLog("Downloading result...")

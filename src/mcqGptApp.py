@@ -177,6 +177,7 @@ def cli_request(message):
 @socketio.on('startprocess')
 def startProcess(data):
     print('received message: ' + str(data))
+    gv.gWeblogCount = 0
     gv.iDataMgr.startProcess()
     emit('startprocess', 
          {'data': 'Starting to process MCQ-source: %s \n' %str(gv.gAppParmDict['srcName'])})

@@ -128,6 +128,7 @@ else:
 gTestMD = CONFIG_DICT['TEST_MD'] if 'TEST_MD' in CONFIG_DICT.keys() else False
 # Init the App used parameter dict
 gAppParmDict = {}
+gWeblogCount = 0 
 
 # Init Flask App parameters : 
 gflaskHost = '0.0.0.0'

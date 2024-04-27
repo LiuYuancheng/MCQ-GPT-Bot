@@ -6,6 +6,19 @@ This document will introduce how to use the Cyber Security AI robot by console i
 
 [TOC]
 
+- [MCQ-GPT-ROBOT Usage Manual](#mcq-gpt-robot-usage-manual)
+    + [Use MCQ-GPT-ROBOT Console Interface](#use-mcq-gpt-robot-console-interface)
+      - [Step1: Copy the cyber security MCQ source files](#step1--copy-the-cyber-security-mcq-source-files)
+      - [Step2: Set the MCQ-GPT-ROBOT execution configuration file](#step2--set-the-mcq-gpt-robot-execution-configuration-file)
+      - [Step 3: Run the MCQ-GPT-ROBOT to batch process all the MCQ sources](#step-3--run-the-mcq-gpt-robot-to-batch-process-all-the-mcq-sources)
+      - [Step 4: Check the MCQ solving result or the AI correctness rate](#step-4--check-the-mcq-solving-result-or-the-ai-correctness-rate)
+    + [Use MCQ-GPT-ROBOT Web Interface](#use-mcq-gpt-robot-web-interface)
+      - [Step 1: Set the MCQ-GPT-ROBOT execution configuration file](#step-1--set-the-mcq-gpt-robot-execution-configuration-file)
+      - [Step 2: Run the MCQ-GPT-ROBOT web host program](#step-2--run-the-mcq-gpt-robot-web-host-program)
+        * [Step 2.1 Set the robot function mode](#step-21-set-the-robot-function-mode)
+        * [Step 2.2 Upload the question source](#step-22-upload-the-question-source)
+        * [Step2.3 process the MCQ source](#step23-process-the-mcq-source)
+
 ------
 
 ### Use MCQ-GPT-ROBOT Console Interface
@@ -177,3 +190,24 @@ Based on the config file port, open browser and type in web interface URL : http
 
 ##### Step 2.1 Set the robot function mode 
 
+Select the mode and press the button "Set MCQ-GPT-Bot mode " button as shown below:
+
+![](doc/img/usageManual04.png)
+
+##### Step 2.2 Upload the question source 
+
+Upload the source with different source type 
+
+![](doc/img/usageManual05.png)
+
+##### Step2.3 process the MCQ source 
+
+Press the "Start" button to press the MCQ source, when the source process finished, the result will be automated download. 
+
+![](doc/img/usageManual06.png)
+
+
+
+------
+
+> last edit by LiuYuancheng (liu_yuan_cheng@hotmail.com) by 29/04/2023 if you have any problem, please send me a message. 

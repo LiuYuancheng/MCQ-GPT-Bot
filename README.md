@@ -19,6 +19,26 @@
 
 [TOC]
 
+- [MCQ-GPT-ROBOT](#mcq-gpt-robot)
+    + [Large Language Module Cyber Security Multi-Choice-Questions Solver](#large-language-module-cyber-security-multi-choice-questions-solver)
+    + [Introduction](#introduction)
+        * [Introduction of Program Workflow](#introduction-of-program-workflow)
+        * [AI Solution Correctness](#ai-solution-correctness)
+    + [Program Design](#program-design)
+        * [Design of 'QuestionParser' Module](#design-of--questionparser--module)
+        * [Design of 'McqDataManager' Module](#design-of--mcqdatamanager--module)
+        * [Design of 'llmMcqSolver' Module](#design-of--llmmcqsolver--module)
+        * [Question Solution Prompt](#question-solution-prompt)
+    + [Program Setup](#program-setup)
+          + [Development Environment : python 3.8.2 rc2](#development-environment---python-382-rc2)
+          + [Additional Lib/Software Need](#additional-lib-software-need)
+          + [Hardware Needed : None](#hardware-needed---none)
+        * [Program module files list](#program-module-files-list)
+    + [Program Usage](#program-usage)
+    + [Problem and Solution](#problem-and-solution)
+    + [Reference](#reference)
+        * [AI Answer's Correctness rate for cyber security MCQ question test:](#ai-answer-s-correctness-rate-for-cyber-security-mcq-question-test-)
+
 ------
 
 ### Introduction

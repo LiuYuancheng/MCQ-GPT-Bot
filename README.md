@@ -4,7 +4,7 @@
 
  ![](doc/img/logo.png)
 
-**Program Design Purpose**: Our objective is to develop a simple LLM-AI assistant program capable of efficiently processing batches of multi-choice cyber security questions sourced from various formats such as Markdown (md) , URL, HTML, Text (`txt`), Json and PDF. Leveraging Open-AI (ChatGPT), the program will provide answers to these questions, enabling researchers to assess the AI's accuracy in answering queries (such as the prompt engineering), its performance across diverse fields, and conduct comprehensive data analysis. The program workflow overview is shown below:
+**Program Design Purpose**: Our objective is to develop a simple LLM-AI assistant program capable of efficiently automated processing batches of multi-choice cyber security questions sourced from various formats such as Markdown (md) , URL, HTML, Text (`txt`), Json and PDF. Leveraging Open-AI (ChatGPT), the program will provide answers to these questions, enabling researchers to assess the AI's accuracy in answering queries (such as the prompt engineering), its performance across diverse fields, and conduct comprehensive data analysis. The program workflow overview is shown below:
 
 ![](doc/img/overview.png)
 
@@ -19,27 +19,6 @@
 
 [TOC]
 
-- [MCQ-GPT-Bot](#mcq-gpt-bot)
-    + [Introduction](#introduction)
-        * [Program Workflow Diagram](#program-workflow-diagram)
-        * [AI Solution Correctness](#ai-solution-correctness)
-    + [Program Design](#program-design)
-        * [Program module files list](#program-module-files-list)
-    + [Program Setup](#program-setup)
-          + [Development Environment : python 3.8.2 rc2](#development-environment---python-382-rc2)
-          + [Additional Lib/Software Need](#additional-lib-software-need)
-          + [Hardware Needed : None](#hardware-needed---none)
-    + [Program Usage](#program-usage)
-        * [Step1: Copy the MCQ source file](#step1--copy-the-mcq-source-file)
-        * [Step2: Set the configuration file](#step2--set-the-configuration-file)
-        * [Step3: Run the Bot to batch process all the MCQ source](#step3--run-the-bot-to-batch-process-all-the-mcq-source)
-    + [Problem and solution](#problem-and-solution)
-        * [Problem [0]: Execution Exception: OpenAI API timeout](#problem--0---execution-exception--openai-api-timeout)
-    + [Reference](#reference)
-        * [AI Answer's Correctness rate for cyber security MCQ question test:](#ai-answer-s-correctness-rate-for-cyber-security-mcq-question-test-)
-
-
-
 ------
 
 ### Introduction
@@ -52,33 +31,19 @@ The MCQ-GPT-ROBOT is an automated AI assistant program to help the cyber securit
 
 To facilitate seamless communication with the Open-AI API, the program utilizes the [LangChain](https://python.langchain.com/docs/get_started/introduction.html) framework. Furthermore, we provide both console interface and the web interface allow researchers to test their prompts and integrate the bot/function in their program.
 
+##### Introduction of Program Workflow 
 
-
-![](doc/img/webUI.png)
-
-
-
-NCL allows the user to build their own container based environment and NCL will provide the OS images for the container. User can config whether enable or disable the OS  automatic updates, when enabled, allows user instances to stay up-to-date with respect to security fixes and bug fixes.
-
-
-
-
-
-##### Program Workflow Diagram
-
-The program will follow below workflow to load the question sources, process the questions and archive the result:
+The program employs a dual-threaded approach, with one thread dedicated to parsing MCQ source files and the other to solving MCQs, enabling parallel processing of security questions. The system workflow is depicted below:
 
 ![](doc/img/workflow.png)
 
-The program is a single thread program to continuous loading all the question source files/urls set in the config file, convert to the standard question format, then based on the question type setup the LLM's scenario prompt and send to the questions solver to get the AI's solution. If you have multiple OpenAI-API, you can also config multi-thread with several parser and question solver to increase the processing efficiency.
+`Diagram Version: v0.1.3` 
+
+The MCQ source parser module continuously loads all question source files/URLs specified in the configuration file, which can be selected from the command console interface or uploaded via the web interface. It converts these questions into a standardized format, adjusts the LLM's scenario prompts based on the question type, and then sends them to the question solver module to obtain the AI's solution. If the users have multiple OpenAI-API, you can also config multi-thread with several parser and question solver to increase the processing efficiency.
 
 ##### AI Solution Correctness 
 
 Based on our test to applying on 500+ MCQ question, currently for different level difficulty cyber security question (such as CISCO-CCIE, Huawei Certified Network Associate exam, IBM Security QRadar certificate exam ...) , the AI can provide **60% to 80%** correctness rate. For the correctness test, please refer to the reference section: [AI Answer's Correctness rate for cyber security MCQ question test](#ai-answer-s-correctness-rate-for-cyber-security-mcq-question-test-)
-
-##### Current Stable Program Version 
-
-`Version: v0.1.2` 
 
 
 
@@ -86,22 +51,22 @@ Based on our test to applying on 500+ MCQ question, currently for different leve
 
 ### Program Design 
 
-As shown in the workflow diagram, the MCQ data will be processed follow the data flow below:
+As illustrated in the workflow diagram in the introduction section, the processing of MCQ data follows the data flow outlined below:
 
 ```mermaid
 graph LR;
-A[MCQ data mining] -->  B
-B[MCQ data normalization] --> C
-C[MCQ data storage] --> D
-D[MCQ data analysis] --> E
-E[result archiving]
+A[Security MCQ data mining] -->  B
+B[Security MCQ data normalization] --> C
+C[Security MCQ data storage] --> D
+D[Security MCQ data analysis] --> E
+E[Result archiving]
 ```
 
 The program will provide three main modules to finish the steps: 
 
-##### QuestionParser
+##### Design of 'QuestionParser' Module
 
-The MCQ question data parser (QuestionParser) will do the data mining and normalization step,  it will load all the contents from MCQ source files or URL, use AI to find all the MCQs,  then generate the standard question bank data. All the questions will be formatted to below text format:
+The MCQ question data parser module ( `QuestionParser` ) conducts data mining and normalization. It extracts content from MCQ source files or URLs, utilizes AI to identify all MCQs, and generates standardized question bank data. Each question is formatted as follows:
 
 ```
 Question:< Question string >
@@ -111,13 +76,13 @@ C. choice 3
 D. choice 4
 ```
 
-##### McqDataManager 
+##### Design of 'McqDataManager' Module
 
-The MCA data manager (McqDataManger) will do the data storage and result archiving step, it will store and questions, AI's answers and format the result. As we will batch process multiple question source, the data manager will log the process progress (such as whether a source file's result has been archived) so if there is program execution interruption happens, when the user run again, the don't need to process the source from the beginning. 
+The MCQ data manager ( `McqDataManager` ) handles data storage and result archiving. It stores questions, AI-generated answers, and formats the results. Since multiple question sources are batch processed, the data manager logs progress (e.g., whether a source file's result has been archived). This ensures that if program execution is interrupted, users can resume without reprocessing the entire source. 
 
-##### llmMcqSolver 
+##### Design of 'llmMcqSolver' Module 
 
-The large language MCQ solver (llmMcqSolver) will fetch the question from the data manager, preload the MCQ questions scenario prompt to OpenAI, then call OpenAI API to get the answer and calculate the AI's correctness rate based on the setting. After process, different kind of question format source will be convert to the standard question bank file format as shown blow: 
+The Large Language Model MCQ solver ( `LLM-MCQSolver` ) retrieves questions from the data manager, preloads MCQ scenario prompts to OpenAI, and calls the OpenAI API to obtain answers. It calculates the AI's correctness rate based on the settings. After processing, different formats of question sources are converted to the standardized question bank file format as depicted below:
 
 ![](doc/img/convert.png)
 
@@ -145,31 +110,11 @@ Correctness rate: <>
 Based on our test, the AI will provide a higher problem solving correctness rate if we load a problem solving scenario prompt to the AI before we pass the real MCQ question to llmMcqSolver. For example if we want to process the Cisco CCNP Security Implementing Cisco Threat Control Solutions Exam, when we pre-load the below CCPN prompt to the AI before pass the question to AI: 
 
 ```
-CCNA_SOL_TEMPLATE = """You are a helpful assistant who find the answer of the Cisco
-CCNP Security Implementing Cisco Secure Access multi choice questions. Just give the 
-correct choice's front indicator character or characters (if the question shows you 
-need to choose more than one choice). Return choice indicator character in a in a comma 
-separated list. 
+CCNA_SOL_TEMPLATE = """You are a helpful assistant who find the answer of the Cisco CCNP Security Implementing Cisco Secure Access multi choice questions. Just give the correct choice's front indicator character or characters (if the question shows you need to choose more than one choice). Return choice indicator character in a in a comma separated list. 
 """
 ```
 
 The correctness rate will increate from (60/144) **41.66%** (If we don't set scenario prompt) to (73/144) **50.06%** if we test 144 questions. If you load a good scenario prompt to the AI, AI will understand the question better especially for the worlds abbreviations appear in the question.
-
-
-
-##### Program module files list
-
-| Idx  | Program File                       | Execution Env | Description                                                  |
-| ---- | ---------------------------------- | ------------- | ------------------------------------------------------------ |
-| 1    | src/config.txt                     | txt           | System config file.                                          |
-| 2    | src/mcqGptBot.py                   | python 3      | Main MCQ auto batch process program.                         |
-| 3    | src/mcqGptBotUtils.py              | python 3      | Provide different OpenAI utility function modules used by the MCQ-GPT-Bot modules. |
-| 4    | src/mcqGptBotGlobal.py             | python 3      | System global file, the system config file's contents will be saved in the global parameters. |
-| 5    | src/mcqGptPromptRepo.py            | python 3      | Repo to save the customized AI prompt.                       |
-| 6    | lib/ConfigLoader.py                | python 3      | Configuration file loading module.                           |
-| 7    | lib/Log.py                         | python 3      | Log module.                                                  |
-| 8    | questionbank/*                     |               | All the question source files.                               |
-| 9    | questionbank/questionContents.json | json          | Question source config json file.                            |
 
 
 
@@ -198,6 +143,20 @@ pip install langchain
 4. **Valid OpenAI-API key** : https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key
 
 ###### Hardware Needed : None
+
+##### Program module files list
+
+| Idx  | Program File                       | Execution Env | Description                                                  |
+| ---- | ---------------------------------- | ------------- | ------------------------------------------------------------ |
+| 1    | src/config_template.txt            | txt           | System config file template.                                 |
+| 2    | src/mcqGptBot.py                   | python 3      | Main MCQ auto batch process program command interface program. |
+| 3    | src/mcqGptBotUtils.py              | python 3      | Provide different OpenAI utility function modules used by the MCQ-GPT-Bot and the MCQ-GPT-App modules. |
+| 4    | src/mcqGptBotGlobal.py             | python 3      | System global file, the system config file's contents will be saved in the global parameters. |
+| 5    | src/mcqGptPromptRepo.py            | python 3      | Repo to save the customized AI prompt.                       |
+| 6    | lib/ConfigLoader.py                | python 3      | Configuration file loading module.                           |
+| 7    | lib/Log.py                         | python 3      | Log module.                                                  |
+| 8    | questionbank/*                     |               | All the question source files.                               |
+| 9    | questionbank/questionContents.json | json          | Question source config json file.                            |
 
 
 

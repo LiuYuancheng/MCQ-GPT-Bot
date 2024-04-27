@@ -18,7 +18,7 @@
 <ul class="list-group">
 
   <li class="list-group-item">
-    <h3> MCQ-GPT-Bot </h3>
+    <h3> SECURITY MCQ-GPT-ROBOT </h3>
     <p> We want to create an assistant AI-Bot program which can batch process the multi 
       choice cyber security exam questions (From different source format : md, url, html, 
       txt, pdf, json) via OpenAI to get the answers so the researcher can use it to check 
@@ -41,7 +41,7 @@
   <li class="list-group-item">
 
     <div class="row">
-      <div class="col-sm-8">
+      <div class="col-sm-6">
         <h4> <span class="badge badge-secondary"> System Structure </span> </h4>
         <p><b> The program is a single thread program to continuous loading all the question 
           source files/urls set in the config file, convert to the standard question format, 
@@ -51,29 +51,26 @@
           processing efficiency.</b></p>
 
         <dl>
-          <dt>QuestionParser</dt>
-          <dd> &#149; The MCQ question data parser (QuestionParser) will do the data mining and 
+           <p> <b class="text-primary"> QuestionParser </b>: The MCQ question data parser (QuestionParser) will do the data mining and 
             normalization step, it will load all the contents from MCQ source files or URL, 
-            use AI to find all the MCQs, then generate the standard question bank data.</dd>
+            use AI to find all the MCQs, then generate the standard question bank data.</p>
 
-          <dt>McqDataManager</dt>
-          <dd> &#149; The MCA data manager (McqDataManger) will do the data storage and result 
+           <p> <b class="text-primary"> McqDataManager </b>: The MCA data manager (McqDataManger) will do the data storage and result 
             archiving step, it will store and questions, AI's answers and format the result. 
             As we will batch process multiple question source, the data manager will log the 
             process progress (such as whether a source file's result has been archived) so if 
             there is program execution interruption happens, when the user run again, the don't 
-            need to process the source from the beginning. </dd>
+            need to process the source from the beginning.</p>
 
-          <dt> llmMcqSolver  </dt>
-          <dd> &#149; The large language MCQ solver (llmMcqSolver) will fetch the question 
+            <p> <b class="text-primary"> llmMcqSolver </b>: The large language MCQ solver (llmMcqSolver) will fetch the question 
             from the data manager, preload the MCQ questions scenario prompt to OpenAI, then 
             call OpenAI API to get the answer and calculate the AI's correctness rate based on 
-            the setting. </dd>
-        </dl>
+            the setting.</p>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-6">
+        <P> <b> System Work Flow Diagram </b> </P>
+        <br>
         <img src="{{url_for('static', filename='img/workflow.png')}}" align="left" class="img-thumbnail" />
-
       </div>
     </div>
 

@@ -166,47 +166,31 @@ pip install langchain
 
 Please refer to the usage manual document: [link](UsageManual.md)
 
+Run the program under command console mode: 
+
+```
+python/python3 mcqGptBot.py
+```
+
+Run the program by using the web interface 
+
+```
+python/python3 mcqGptApp.py
+```
+
 
 
 ------
 
-### Problem and solution
+### Problem and Solution
 
-##### Problem [0]: Execution Exception: OpenAI API timeout
-
-If you are using Free OpenAI-API key, one minutes you can only process 3 questions, so you may met timeout problem as shown below: 
-
-```
-(vEnv3.8) C:\Works\NCL\Project\ChatGPT_on_MCQ\src>python mcqGptBot.py
-Current working directory is : C:\Works\NCL\Project\ChatGPT_on_MCQ\src
-Current source code location : C:\Works\NCL\Project\ChatGPT_on_MCQ\src
-> Init(): load 4 lines of config
-Start to process 4 question banks
-Processing source file: C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\questionbank_19.txt
-Question parse finish.
-- finished parsing the questions from source.
-Create question bank file: C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\test_question_bank01.txt
-Processing source file: C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\questionbank_20.html
-Question parse finish.
-- finished parsing the questions from source.
-Create question bank file: C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\test_question_bank02.txt
-Processing MCQ url: https://www.yeahhub.com/certified-ethical-hacker-v10-multiple-choice-questions-answers-part-9/
-Question parse finish.
-- finished parsing the questions from source.
-Create question bank file: C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\test_question_bank03.txt
-Processing prf source file: C:\Works\NCL\Project\ChatGPT_on_MCQ\src\questionbank\network-secuirty-quiz-questions-answers.pdf
-Question parse finish.
-```
-
-This is normal, you need to update you OpenAI account to a payment account. 
+For program usage problem and the related solution, please refer to the [Link of Issue File](ProblemAndSolution.md)
 
 
 
 ------
 
 ### Reference
-
-
 
 ##### AI Answer's Correctness rate for cyber security MCQ question test: 
 

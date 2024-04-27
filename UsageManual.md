@@ -2,9 +2,9 @@
 
 This document will introduce how to use the Cyber Security AI robot by console interface or the web interface and how to use the API to integrate the bot/function in your program.
 
+**Table of Contents**
+
 [TOC]
-
-
 
 ------
 
@@ -14,7 +14,7 @@ Follow the below steps to use the MCQ-GPT-ROBOT via command interface. The user 
 
 
 
-##### Step1: Copy the cyber security MCQ source files 
+#### Step1: Copy the cyber security MCQ source files 
 
 Copy the MCQ files ( `*.html`, `*.txt`, `*.md`, `*.json` , `*.pdf` )  you want to process and `questionContents.json` to the a folder in the `src` folder (such as the `questionbank` folder ).  Add or append the files you want to process in the `questionContents.json` as below : 
 
@@ -34,7 +34,7 @@ You can add multiple MCQ src in the list of the json config file.
 
 
 
-##### Step2: Set the MCQ-GPT-ROBOT execution configuration file
+#### Step2: Set the MCQ-GPT-ROBOT execution configuration file
 
 Rename the configuration file template `config_template.txt` to `config.txt` and add you OpenAI-API key as below:
 
@@ -86,7 +86,7 @@ Return choice indicator character in a in a comma separated list.
 
 
 
-##### Step 3: Run the MCQ-GPT-ROBOT to batch process all the MCQ sources
+#### Step 3: Run the MCQ-GPT-ROBOT to batch process all the MCQ sources
 
 Run program:
 
@@ -117,7 +117,7 @@ An example to manual process a pdf MCQ file is shown below:
 
 
 
-##### Step 4: Check the MCQ solving result or the AI correctness rate
+#### Step 4: Check the MCQ solving result or the AI correctness rate
 
 The processed question will be saved in the text question bank file which same name as the name you set in the `questionContents.json` file. You can refer to the `questionbank` folder to check the detail. Example: 
 
@@ -146,7 +146,7 @@ AI Answer compare (correct / total) : 4 / 6 Correctness rate : 0.67
 
 Follow the below steps to use the MCQ-GPT-ROBOT via web interface. 
 
-##### Step 1: Set the MCQ-GPT-ROBOT execution configuration file
+#### Step 1: Set the MCQ-GPT-ROBOT execution configuration file
 
 Set the configure file OpenAI key and module (same setting as the previous sectiohn`Use MCQ-GPT-ROBOT Console Interface setp2` ), change the flask app parameters as shown below (Set the test mode flag `TEST_MD` to false, if set to true the web will not link to your OpenAI  API)
 
@@ -161,7 +161,7 @@ FLASK_MULTI_TH:True
 
 
 
-##### Step 2: Run the MCQ-GPT-ROBOT web host program
+#### Step 2: Run the MCQ-GPT-ROBOT web host program
 
 Run program:
 
@@ -174,4 +174,6 @@ Based on the config file port, open browser and type in web interface URL : http
 ![](doc/img/usageManual03.png)
 
 > Remark: if the log shows MCQ-Solver ready which means the program is connect to Open-AI server correctly. 
+
+##### Step 2.1 Set the robot function mode 
 

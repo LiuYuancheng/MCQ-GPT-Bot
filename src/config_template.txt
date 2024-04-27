@@ -32,7 +32,7 @@ SCE_PROMPT:MCQ_SOL_PROMPT
 
 #-----------------------------------------------------------------------------
 # Init the Flask app parameters
-TEST_MD:True
+TEST_MD:False
 FLASK_SER_PORT:5000
 FLASK_DEBUG_MD:False
 FLASK_MULTI_TH:True

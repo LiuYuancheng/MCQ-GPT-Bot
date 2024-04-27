@@ -48,16 +48,22 @@ def createApp():
 
 #-----------------------------------------------------------------------------
 def createTemMcqFile(contents):
+    """ Create a temporary file used to save the security MCQ contents which 
+        upload by the user directly.
+        Args:
+            contents (str): _description_
+    """
     filename = 'tempQuestionFile.txt'
     gv.gAppParmDict['srcName'] = filename
     gv.gAppParmDict['srcPath'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     gv.gAppParmDict['srcType'] = 'txt'
     gv.gAppParmDict['rstPath'] = None
-    with open(gv.gAppParmDict['srcPath'] , "w") as outfile:
+    with open(gv.gAppParmDict['srcPath'], "w") as outfile:
         outfile.write(contents)
     return True
 
 def checkFile(filename):
+    """ Check whether the upload file name is valid."""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in gv.ALLOWED_EXTENSIONS
 
@@ -107,6 +113,7 @@ def introduction():
 
 @app.route('/mdselect', methods = ['POST', 'GET'])  
 def mdselect():
+    """ Handle the AI mode (get ans or calcuate correctness rate)."""
     posts = {'page': 1, 'mode': gv.gAppParmDict['funcMode']}
     if request.method == 'POST':
         option = request.form['options']
@@ -151,7 +158,8 @@ def textupload():
 @socketio.event
 def connect():
     gv.gAppParmDict['webMsgCount'] = 0
-    emit('serv_response', {'data': 'MCQ-Solver Ready \n', 'count': gv.gAppParmDict['webMsgCount']})
+    emit('serv_response', 
+         {'data': 'MCQ-Solver Ready \n', 'count': gv.gAppParmDict['webMsgCount']})
 
 @socketio.event
 def cli_request(message):
@@ -160,7 +168,8 @@ def cli_request(message):
         if os.path.exists(gv.gAppParmDict['rstPath']):
             gv.gDebugPrint("Download the file.", logType=gv.LOG_INFO)
             with open(gv.gAppParmDict['rstPath']) as fh:
-                socketio.emit('file_ready', {'filename': gv.gAppParmDict['srcName'], 'content': fh.read()})
+                socketio.emit('file_ready', 
+                              {'filename': gv.gAppParmDict['srcName'], 'content': fh.read()})
     else:
         emit('serv_response',
              {'data': message['data'], 'count': session['receive_count']})
@@ -169,7 +178,8 @@ def cli_request(message):
 def startProcess(data):
     print('received message: ' + str(data))
     gv.iDataMgr.startProcess()
-    emit('startprocess', {'data': 'Starting to process MCQ-source: %s \n' %str(gv.gAppParmDict['srcName'])})
+    emit('startprocess', 
+         {'data': 'Starting to process MCQ-source: %s \n' %str(gv.gAppParmDict['srcName'])})
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':

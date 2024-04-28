@@ -126,7 +126,7 @@ An example to auto process a markdown MCQ file is shown below:
 
 An example to manual process a pdf MCQ file is shown below:
 
-![](doc/img/usageManual01.png)
+![](doc/img/usageManual02.png)
 
 
 
@@ -196,7 +196,7 @@ Select the mode and press the button "Set MCQ-GPT-Bot mode " button as shown bel
 
 ##### Step 2.2 Upload the question source 
 
-Upload the source with different source type 
+Upload the source with different source type : 
 
 ![](doc/img/usageManual05.png)
 

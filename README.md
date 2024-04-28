@@ -59,7 +59,7 @@ The program employs a dual-threaded approach, with one thread dedicated to parsi
 
 `Diagram Version: v0.1.3` 
 
-The MCQ source parser module continuously loads all question source files/URLs specified in the configuration file, which can be selected from the command console interface or uploaded via the web interface. It converts these questions into a standardized format, adjusts the LLM's scenario prompts based on the question type, and then sends them to the question solver module to obtain the AI's solution. If the users have multiple OpenAI-API, you can also config multi-thread with several parser and question solver to increase the processing efficiency.
+The MCQ source parser module continuously loads all question source files/URLs specified in the configuration file, which can be selected from the command console interface or uploaded via the web interface. It converts these questions into a standardized format, adjusts the LLM's scenario prompts based on the question type, and then sends them to the question solver module to obtain the AI's solution. If the users have multiple OpenAI-API, they can also config multi-thread with several parser and question solver to increase the processing efficiency.
 
 ##### AI Solution Correctness 
 
@@ -197,6 +197,10 @@ Run the program by using the web interface
 ```
 python/python3 mcqGptApp.py
 ```
+
+Then open the url https://127.0.0.1:5000 to check the web 
+
+![](doc/img/Introduction.png)
 
 
 
